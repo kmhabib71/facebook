@@ -9,6 +9,51 @@ a {
     text-decoration: none;
 }
 
+.like-color {
+    color: #4267B2;
+    font-weight: 600;
+}
+
+.love-color {
+    color: #f63459;
+    ;
+    font-weight: 600;
+}
+
+.haha-color {
+    color: #fbdb68;
+    ;
+    font-weight: 600;
+}
+
+.wow-color {
+    color: #fbdb68;
+    ;
+    font-weight: 600;
+}
+
+.sad-color {
+    color: #fbdb68;
+    ;
+    font-weight: 600;
+}
+
+.angry-color {
+    color: #e4605a;
+    ;
+    font-weight: 600;
+}
+
+.reactIconSize {
+    height: 20px;
+    width: 20px;
+}
+
+.like-action-text span {
+    text-transform: capitalize;
+    /*    text-shadow: 0 0 2px black;*/
+}
+
 .top-box {
     background-color: rgba(255, 255, 255, 0.93);
     position: fixed;
@@ -507,6 +552,7 @@ input#main-search {
     align-items: center;
     border-bottom: 1px solid lightgray;
     padding-bottom: 5px;
+    margin-top: 5px;
 }
 .likeReact {
     background-image: url('../images/likeReact.JPG');

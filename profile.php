@@ -417,7 +417,7 @@ $profileData = $loadFromUser->userData($profileId);
                         for (var i = 0; i < files.length; i++) {
                             var name = document.getElementById("multiple_files").files[i].name;
 
-                            storeImage += '{\"imageName\":\"users/' + <?php echo $userid; ?> + '/postImage/' + name + '\"},'
+                            storeImage += '{\"imageName\":\"user/' + <?php echo $userid; ?> + '/postImage/' + name + '\"},'
 
                             //                            storeImage += "{\"imageName\":\"users/" + <?php echo $userid; ?> +
                             //                                "/postImage/" + name + "\"},";
@@ -661,7 +661,97 @@ $profileData = $loadFromUser->userData($profileId);
                 $(".remIm").empty();
                 $(".remIm").html('<label for="upload" class="file-upload__label" style="margin: 0;border-bottom: none;"><div class="status-bot-1"><img src="assets/images/photo.JPG" alt=""><div class="status-bot-text">Photo/Video</div></label><input id="multiple_files" class="file-upload__input" type="file" name="file-upload remIm" multiple style="width: 100%;">');
             });
+            $(".like-action-wrap").hover(function() {
+                var mainReact = $(this).find('.react-bundle-wrap');
+                $(mainReact).html('<div class="react-bundle align-middle" style="position:absolute;margin-top: -43px; margin-left: -40px; display:flex; background-color:white;padding: 0 2px;border-radius: 25px; box-shadow: 0px 0px 5px black; height:45px; width:270px; justify-content:space-around; transition: 0.3s;"><div class="like-react-click align-middle"><img class="main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/like.png "; ?>" alt=""></div><div class="love-react-click align-middle"><img class="main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/love.png "; ?>" alt=""></div><div class="haha-react-click align-middle"><img class="main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/haha.png "; ?>" alt=""></div><div class="wow-react-click align-middle"><img class="main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/wow.png "; ?>" alt=""></div><div class="sad-react-click align-middle"><img class="main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/sad.png "; ?>" alt=""></div><div class="angry-react-click align-middle"><img class="main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/angry.png "; ?>" alt=""></div></div>');
+            }, function() {
+                var mainReact = $(this).find('.react-bundle-wrap');
+                $(mainReact).html('');
+            });
+
+
+
+
+
+            $(document).on('click', '.main-icon-css', function() {
+                var likeReact = $(this).parent();
+                reactApply(likeReact);
+            })
+            var id = 24;
+
+            function reactApply(sClass) {
+                if ($(sClass).hasClass('like-react-click')) {
+                    mainReactSub('like', 'blue', id);
+                } else if ($(sClass).hasClass('love-react-click')) {
+                    mainReactSub('love', 'red', id);
+                } else if ($(sClass).hasClass('haha-react-click')) {
+                    mainReactSub('haha', 'yellow', id);
+                } else if ($(sClass).hasClass('wow-react-click')) {
+                    mainReactSub('wow', 'yellow', id);
+                } else if ($(sClass).hasClass('sad-react-click')) {
+                    mainReactSub('sad', 'yellow', id);
+                } else if ($(sClass).hasClass('angry-react-click')) {
+                    mainReactSub('angry', 'angry', id);
+                } else {
+                    console.log('not found');
+                }
+            }
+
+            function mainReactSub(typeR, color, id) {
+                var reactColor = '' + typeR + '-color';
+                var pClass = $('.' + typeR + '-react-click.align-middle');
+                var likeReactParent = $(pClass).parents('.like-action-wrap');
+                var likeAction = likeReactParent.find('.like-action');
+                var likeActionIcon = likeAction.find('.like-action-icon img');
+                var spanClass = $(likeAction).find('.like-action-text').find('span');
+                //                spanClass.text(typeR);
+                if ($(spanClass).hasClass(reactColor)) {
+                    $(spanClass).removeClass();
+                    spanClass.text("Like");
+                    $(likeActionIcon).attr("src", "assets/images/likeAction.JPG");
+
+                } else if ($(spanClass).attr('class') !== undefined) {
+                    $(spanClass).removeClass().addClass(reactColor);
+                    spanClass.text(typeR);
+                    $(likeActionIcon).removeAttr('src').attr("src", "assets/images/react/" + typeR + ".png").addClass('reactIconSize');
+                } else {
+                    $(spanClass).addClass(reactColor);
+                    $(likeActionIcon).attr("src", "assets/images/react/" + typeR + ".png").addClass('reactIconSize');
+                    spanClass.text(typeR);
+                    $(likeActionIcon).removeAttr('src').attr("src", "assets/images/react/" + typeR + ".png").addClass('reactIconSize');
+
+                }
+            }
         });
+
+
+        $(document).on('click', '.like-action', function() {
+            var likeActionIcon = $(this).find('.like-action-icon img');
+            var spanClass = $(this).find('.like-action-text').find('span');
+            if ($(spanClass).attr('class') !== undefined) {
+                if ($(likeActionIcon).attr('src') == "assets/images/likeAction.JPG") {
+                    (spanClass).addClass('like-color');
+                    $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
+                    spanClass.text("Like");
+                } else {
+                    $(likeActionIcon).attr("src", "assets/images/likeAction.JPG");
+                    spanClass.removeClass();
+                    spanClass.text("Like");
+                }
+            } else if ($(spanClass).attr('class') === undefined) {
+                $(spanClass).addClass('like-color');
+                $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
+                spanClass.text("Like");
+
+            } else {
+                $(spanClass).addClass('like-color');
+                $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
+                spanClass.text("Like");
+            }
+        })
+
+
+
         $(document).mouseup(function(e) {
             var container = new Array();
             container.push($('.add-cov-opt'));

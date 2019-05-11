@@ -52,6 +52,19 @@ class Post extends User {
                     <div class="nf-2-text">
                         <?php echo $post->post; ?>
                     </div>
+                    <div class="nf-2-img">
+                        <?php $imgJson = json_decode($post->postImage); 
+                            $count = 0;
+                                for($i = 0; $i < count($imgJson); $i++) {
+                                    echo '<div class="post-img-box" data-postImgID="'.$post->id.'" style="max-height: 400px;
+    overflow: hidden;"><img src="'.BASE_URL.$imgJson[''.$count++.'']->imageName.'" alt="" style="width: 100%;"></div>';
+                                }
+                                
+                        
+                        
+                        ?>
+                    </div>
+
                 </div>
                 <div class="nf-3">
                     <div class="nf-3-react-icon">
@@ -65,11 +78,44 @@ class Post extends User {
                     </div>
                 </div>
                 <div class="nf-4">
-                    <div class="like-action ra">
-                        <div class="like-action-icon">
-                            <img src="assets/images/likeAction.JPG" alt="">
+                    <style>
+                        .main-icon-css {
+                            height: 35px;
+                            width: 35px;
+                            /*                            padding: 0 5px;*/
+                            cursor: pointer;
+                            position: absolute;
+                        }
+                        
+                        .main-icon-css:hover {
+                            height: 42px;
+                            width: 42px;
+                            /*                            padding: 0 5px;*/
+                            transform: rotate(30deg);
+                            transition: 0.2s;
+                            cursor: pointer;
+                            position: absolute;
+                        }
+                        
+                        .like_focus {
+                            /*
+                            color: #4267B2;
+                            font-weight: 600;
+*/
+                        }
+
+                    </style>
+                    <div class="like-action-wrap " style="position:relative;">
+                        <div class="react-bundle-wrap">
+
                         </div>
-                        <div class="like-action-text">Like</div>
+                        <div class="like-action ra">
+                            <div class="like-action-icon">
+                                <img src="assets/images/likeAction.JPG" alt="">
+                            </div>
+                            <div class="like-action-text"><span>Like</span></div>
+                        </div>
+
                     </div>
                     <div class="comment-action ra">
                         <div class="comment-action-icon">

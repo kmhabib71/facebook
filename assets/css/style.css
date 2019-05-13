@@ -593,6 +593,25 @@ input#main-search {
 .nf-5 {
     margin: 10px 0;
 }
+.main-icon-css {
+    height: 35px;
+    width: 35px;
+    /*                            padding: 0 5px;*/
+    
+    cursor: pointer;
+    position: absolute;
+}
+.main-icon-css:hover {
+    height: 42px;
+    width: 42px;
+    /*                            padding: 0 5px;*/
+    
+    transform: rotate(30deg);
+    transition: 0.2s;
+    cursor: pointer;
+    position: absolute;
+}
+.like_focus {}
 .com-pro-text {
     color: black;
     font-size: 12px;

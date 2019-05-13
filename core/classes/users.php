@@ -88,6 +88,7 @@ class User {
 			$stmt->execute();
 		}
 	}
+    
 	public function checkUsername($username){
 		$stmt = $this->pdo->prepare("SELECT `username` FROM users WHERE `username` = :username");
 		$stmt->bindParam(":username", $username, PDO::PARAM_STR);
@@ -134,6 +135,13 @@ class User {
 			return $this->pdo->lastInsertId();
 		}
     }
+    public function reactExistingCheck($postId, $userID ){
+	$stmt = $this->pdo->prepare("SELECT reactID from `react` WHERE `reactOn`= :postId AND `reactBy` = :userID  ");
+             $stmt->bindParam(":postId", $postId, PDO::PARAM_INT);
+             $stmt->bindParam(":userID ", $userID, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+		}
 public function allPhoto($profileId){
     $stmt = $this->pdo->prepare("SELECT * FROM `tweets` WHERE `tweetBy`= :profileID");
     $stmt->bindParam(":profileID", $profileId, PDO::PARAM_INT);

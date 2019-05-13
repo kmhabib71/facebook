@@ -14,9 +14,13 @@ class Post extends User {
 		$stmt->execute();
 		$posts = $stmt->fetchAll(PDO::FETCH_OBJ);
 		foreach($posts as $post){
-//			$likes = $this->likes($user_id, $post->postID);
+			$main_react = $this->main_react($user_id, $post->post_id);
+			$react_max_show = $this->react_max_show($post->post_id);
+			$main_react_count = $this->main_react_count($post->post_id);
+			
 //			$repost = $this->checkRepost($post->postID, $user_id);
 //			$user = $this->userData($post->repostBy);
+          
 			?>
     <div class="profile-timeline">
         <div class="news-feed-comp">
@@ -68,52 +72,58 @@ class Post extends User {
                 </div>
                 <div class="nf-3">
                     <div class="nf-3-react-icon">
-                        <div class="likeReact">
+                        <div class="react-inst-img align-middle" style="">
+                            <?php 
+            
+            
+            
+            
+
+                
+                foreach($react_max_show as $react_max){
+                echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:15px;width:15px;margin-right:2px;cursor:pointer;">';
+            
+                 } ?>
+
 
                         </div>
 
                     </div>
                     <div class="nf-3-react-username">
-                        Farhan kabir, Shafiq Rahim and 38 others
+                        <!--                        Farhan kabir, Shafiq Rahim and 38 others-->
+                        <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
+
                     </div>
                 </div>
                 <div class="nf-4">
                     <style>
-                        .main-icon-css {
-                            height: 35px;
-                            width: 35px;
-                            /*                            padding: 0 5px;*/
-                            cursor: pointer;
-                            position: absolute;
-                        }
-                        
-                        .main-icon-css:hover {
-                            height: 42px;
-                            width: 42px;
-                            /*                            padding: 0 5px;*/
-                            transform: rotate(30deg);
-                            transition: 0.2s;
-                            cursor: pointer;
-                            position: absolute;
-                        }
-                        
-                        .like_focus {
-                            /*
-                            color: #4267B2;
-                            font-weight: 600;
-*/
-                        }
+
 
                     </style>
-                    <div class="like-action-wrap " style="position:relative;">
+                    <div class="like-action-wrap" data-postId="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>" style="position:relative;">
                         <div class="react-bundle-wrap">
 
                         </div>
+
                         <div class="like-action ra">
+                            <?php if(empty($main_react)){
+                            ?>
                             <div class="like-action-icon">
                                 <img src="assets/images/likeAction.JPG" alt="">
                             </div>
                             <div class="like-action-text"><span>Like</span></div>
+                            <?php
+                        }else{  ?>
+                                <div class="like-action-icon">
+                                    <img class="reactIconSize" src="assets/images/react/<?php echo $main_react->reactType; ?>.png" alt="">
+                                </div>
+                                <div class="like-action-text">
+                                    <span class="<?php echo $main_react->reactType; ?>-color">
+                                    <?php echo $main_react->reactType; ?>
+                                    </span></div>
+
+
+                                <?php } ?>
                         </div>
 
                     </div>
@@ -175,6 +185,30 @@ class Post extends User {
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
+    
+    public function main_react($userid, $postid){
+        $stmt = $this->pdo->prepare("SELECT * FROM `react` WHERE `reactBy` = :user_id AND `reactOn` = :postid AND  `reactCommentOn` = '0' AND `reactReplyOn` = '0'");
+			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }    
+    public function react_max_show($postid){
+        $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid GROUP by reactType LIMIT 3;");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } 
+    public function main_react_count($postid){
+        $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid;");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+    
+   
+    
+    
 	public function addLike($user_id, $post_id, $get_id){
 			$stmt = $this->pdo->prepare("UPDATE `posts` SET `likesCount` = `likesCount` +1 WHERE `postID` = :post_id");
 			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
@@ -196,14 +230,14 @@ class Post extends User {
 			$stmt->execute();
 		}
 
-		public function likes($user_id, $post_id){
-			$stmt = $this->pdo->prepare("SELECT * FROM `likes` WHERE `likeBy` = :user_id AND `likeOn` = :post_id ");
-			$stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
-			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
-			$stmt->execute();
-			return $stmt->fetch(PDO::FETCH_ASSOC);
-
-		}
+//		public function main_react($user_id, $post_id){
+//			$stmt = $this->pdo->prepare("SELECT * FROM `react` WHERE `reactBy` = :user_id AND `likeOn` = :post_id ");
+//			$stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+//			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+//			$stmt->execute();
+//			return $stmt->fetch(PDO::FETCH_ASSOC);
+//
+//		}
 
 	public function getTrendByHash($hashtag){
 		$stmt=$this->pdo->prepare("SELECT * FROM `trends` WHERE `hashtag` LIKE :hashtag LIMIT 5");

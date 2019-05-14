@@ -9,6 +9,15 @@ a {
     text-decoration: none;
 }
 
+textarea:focus,
+input:focus {
+    outline: none;
+}
+
+li {
+    list-style: none;
+}
+
 .like-color {
     color: #4267B2;
     font-weight: 600;
@@ -640,11 +649,44 @@ input#main-search {
 }
 .comment-write {
     display: flex;
+    align-items: center;
+    margin: 10px 0;
 }
 .com-time {
     font-size: 10px;
     color: gray;
     margin-left: 10px;
+}
+.com-input {
+    width: 100%;
+    background-color: #f2f3f5;
+    display: flex;
+    border-radius: 25px;
+    border: 1px solid #8672723d;
+}
+.comment-input-option {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-basis: 25%;
+}
+.comment-input-style {
+    width: 100%;
+    border: none;
+    height: 15px;
+    background-color: #f2f3f5;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    padding: 10px;
+    font-size: 12px;
+}
+ul.add-comment {
+    padding-left: 0;
+    margin-top: 0;
+}
+li.new-comment {
+    margin-top: 10px;
 }
 
 /*................ end timeline.............*/

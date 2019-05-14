@@ -701,24 +701,33 @@ $profileData = $loadFromUser->userData($profileId);
                 var reactColor = '' + typeR + '-color';
                 var pClass = $('.' + typeR + '-react-click.align-middle');
                 var likeReactParent = $(pClass).parents('.like-action-wrap');
+
+                var nf4 = $(likeReactParent).parents('.nf-4');
+                var nf_3 = $(nf4).siblings('.nf-3');
+                var reactCount = $(nf4).siblings('.nf-3').find('.nf-3-react-username');
+                var reactNumText = $(reactCount).text();
+
                 var postId = $(likeReactParent).data('postid');
                 var userId = $(likeReactParent).data('userid');
                 var likeAction = likeReactParent.find('.like-action');
                 var likeActionIcon = likeAction.find('.like-action-icon img');
                 var spanClass = $(likeAction).find('.like-action-text').find('span');
+                //                alert(nf_3);
                 //                spanClass.text(typeR);
                 if ($(spanClass).hasClass(reactColor)) {
                     $(spanClass).removeClass();
                     spanClass.text("Like");
                     $(likeActionIcon).attr("src", "assets/images/likeAction.JPG");
-                    mainReactDelete(typeR, postId, userId);
+                    mainReactDelete(typeR, postId, userId, nf_3);
+                    //                    reactCountDec(reactCount, reactNumText)
+
                 } else if ($(spanClass).attr('class') !== undefined) {
                     $(spanClass).removeClass().addClass(reactColor);
                     spanClass.text(typeR);
                     $(likeActionIcon).removeAttr('src').attr("src", "assets/images/react/" + typeR + ".png").addClass('reactIconSize');
 
-                    console.log(typeR, postId, userId);
-                    mainReactSubmit(typeR, postId, userId);
+                    mainReactSubmit(typeR, postId, userId, nf_3);
+                    //                    reactCountInc(reactCount, reactNumText)
 
                 } else {
                     $(spanClass).addClass(reactColor);
@@ -727,12 +736,13 @@ $profileData = $loadFromUser->userData($profileId);
                     $(likeActionIcon).removeAttr('src').attr("src", "assets/images/react/" + typeR + ".png").addClass('reactIconSize');
 
                     console.log(typeR, postId, userId);
-                    mainReactSubmit(typeR, postId, userId);
+                    mainReactSubmit(typeR, postId, userId, nf_3);
+                    //                    reactCountInc(reactCount, reactNumText)
 
                 }
             }
 
-            function mainReactDelete(typeR, postId, userId) {
+            function mainReactDelete(typeR, postId, userId, nf_3) {
                 $.post('http://localhost/facebook/core/ajax/react.php', {
                     deleteReactType: typeR,
                     postId: postId,
@@ -740,61 +750,161 @@ $profileData = $loadFromUser->userData($profileId);
 
                 }, function(data) {
                     //                    alert(data);
+                    $(nf_3).empty().html(data);
                 });
             }
 
-            function mainReactSubmit(typeR, postId, userId) {
+            function mainReactSubmit(typeR, postId, userId, nf_3) {
                 $.post('http://localhost/facebook/core/ajax/react.php', {
                     reactType: typeR,
                     postId: postId,
                     userId: userId
 
                 }, function(data) {
-                    //                    alert('React done');
+                    //                    alert(data);
+                    $(nf_3).empty().html(data);
                 });
 
             }
             $(document).on('click', '.like-action', function() {
                 var likeActionIcon = $(this).find('.like-action-icon img');
                 var likeReactParent = $(this).parents('.like-action-wrap');
+
+                var nf4 = $(likeReactParent).parents('.nf-4');
+                var nf_3 = $(nf4).siblings('.nf-3');
+                var reactCount = $(nf4).siblings('.nf-3').find('.nf-3-react-username');
+                var reactIcon = $(nf4).siblings('.nf-3').find('.react-inst-img');
+                var reactNumText = $(reactCount).text();
                 var postId = $(likeReactParent).data('postid');
                 var userId = $(likeReactParent).data('userid');
                 var typeText = $(this).find('.like-action-text span');
                 var typeR = $(typeText).text();
 
 
+                //                reactNumText--;
                 var spanClass = $(this).find('.like-action-text').find('span');
                 if ($(spanClass).attr('class') !== undefined) {
                     if ($(likeActionIcon).attr('src') == "assets/images/likeAction.JPG") {
                         (spanClass).addClass('like-color');
                         $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
                         spanClass.text("Like");
-                        mainReactSubmit(typeR, postId, userId)
+                        mainReactSubmit(typeR, postId, userId, nf_3)
+                        //                        reactCountInc(postId, reactCount, reactNumText)
+
+
 
                     } else {
                         $(likeActionIcon).attr("src", "assets/images/likeAction.JPG");
                         spanClass.removeClass();
                         spanClass.text("Like");
-                        mainReactDelete(typeR, postId, userId);
+                        mainReactDelete(typeR, postId, userId, nf_3);
+                        //                        reactCountDec(reactCount, reactNumText, reactIcon)
+
                     }
                 } else if ($(spanClass).attr('class') === undefined) {
                     $(spanClass).addClass('like-color');
                     $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
                     spanClass.text("Like");
-                    mainReactSubmit(typeR, postId, userId)
+                    mainReactSubmit(typeR, postId, userId, nf_3);
 
+                    //                    reactCountInc(postId, reactCount, reactNumText)
                 } else {
                     $(spanClass).addClass('like-color');
                     $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
                     spanClass.text("Like");
-                    mainReactSubmit(typeR, postId, userId)
+                    mainReactSubmit(typeR, postId, userId, nf_3);
+                    //                    reactCountInc(postId, reactCount, reactNumText)
+
                 }
             })
 
 
+            //            function reactCountInc(postId, reactCount, reactNumText) {
+            //
+            //                reactNumText++;
+            //                $(reactCount).text(reactNumText);
+            //
+            //            }
+            //
+            //            function reactCountDec(reactCount, reactNumText, reactIcon) {
+            //                reactNumText--;
+            //                if (reactNumText === 0) {
+            //                    $(reactCount).empty();
+            //                    $(reactIcon).empty();
+            //                } else {
+            //                    $(reactCount).show().text(reactNumText);
+            //                }
+            //            }
+
+            /////////////.........comment part start..............///////
+
+
+            $('.comment-submit').keyup(function(e) {
+                if (e.keyCode == 13) {
+                    var inputNull = $(this);
+                    var comment = $(this).val();
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    //                    alert(comment);
+                    var commentPlaceholder = $(this).parents('.nf-5').find('ul.add-comment');
+                    if (comment == '') {
+                        alert("Please Enter Some Text");
+                    } else {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost/facebook/core/ajax/comment.php",
+                            data: {
+                                comment: comment,
+                                userid: userid,
+                                postid: postid
+                            },
+                            cache: false,
+                            success: function(html) {
+                                $(commentPlaceholder).append(html);
+                                console.log(html);
+                                $(inputNull).val('');
+                            }
+                        });
+
+                    }
+                }
+            });
 
 
 
+            //function AjaxSendForm(url, placeholder, form, append) {
+            //var data = $(form).serialize();
+            //append = (append === undefined ? false : true); // whatever, it will evaluate to true or false only
+            //$.ajax({
+            //    type: 'POST',
+            //    url: url,
+            //    data: data,
+            //    beforeSend: function() {
+            //        // setting a timeout
+            //        $(placeholder).addClass('loading');
+            //    },
+            //    success: function(data) {
+            //        if (append) {
+            //            $(placeholder).append(data);
+            //        } else {
+            //            $(placeholder).html(data);
+            //        }
+            //    },
+            //    error: function(xhr) { // if error occured
+            //        alert("Error occured.please try again");
+            //        $(placeholder).append(xhr.statusText + xhr.responseText);
+            //        $(placeholder).removeClass('loading');
+            //    },
+            //    complete: function() {
+            //        $(placeholder).removeClass('loading');
+            //    },
+            //    dataType: 'html'
+            //});
+            //}
+
+
+            /////////////.........comment part end..............///////
 
 
 

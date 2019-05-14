@@ -20,7 +20,7 @@ class Post extends User {
 			
 //			$repost = $this->checkRepost($post->postID, $user_id);
 //			$user = $this->userData($post->repostBy);
-          
+          $commentDetails=$this->CommentFetch($post->post_id);
 			?>
     <div class="profile-timeline">
         <div class="news-feed-comp">
@@ -140,33 +140,61 @@ class Post extends User {
                 </div>
                 <div class="nf-5">
                     <div class="comment-list">
-                        <div class="com-details">
-                            <div class="com-pro-pic">
-                                <a href="#">
-                                    <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
-                                </a>
-                            </div>
-                            <div class="com-pro-wrap">
-                                <div class="com-pro-text">
-                                    <a href="#"><span class="nf-pro-name">Raihan Kabir</span></a> This is comment section for test purpose.This is comment section for test purpose.This is comment section for test purpose.This is comment section for test purpose.
+                        <ul class="add-comment">
+                            <?php foreach($commentDetails as $comment){
+        
+        ?>
+                            <li class="new-comment">
+                                <div class="com-details">
+                                    <div class="com-pro-pic">
+                                        <a href="#">
+                                            <div class="top-pic"><img src="<?php echo $comment->profilePic; ?>" alt=""></div>
+                                        </a>
+                                    </div>
+                                    <div class="com-pro-wrap">
+                                        <div class="com-pro-text">
+                                            <a href="#"><span class="nf-pro-name"><?php echo ''.$comment->firstName.' '.$comment->lastName.''; ?></span></a>
+                                            <?php echo $comment->comment; ?>
+                                        </div>
+                                        <div class="com-react">
+                                            <div class="com-like-react">Like</div>
+                                            <div class="com-reply-action">Reply</div>
+                                            <div class="com-time"> 11h </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="com-react">
-                                    <div class="com-like-react">Like</div>
-                                    <div class="com-reply-action">Reply</div>
-                                    <div class="com-time"> 11h </div>
-                                </div>
-                            </div>
-                        </div>
+                            </li>
 
+
+                            <?php
+    } ?>
+                        </ul>
                     </div>
                     <div class="comment-write">
-                        <div class="com-pro-pic">
+                        <div class="com-pro-pic" style="margin-top: 4px;">
                             <a href="#">
                                 <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
                             </a>
                         </div>
-                        <div class="com-input">
-                            <input type="text" name="" id="" style="width:100%;border:none;">
+                        <div class="com-input" style="">
+                            <div class="comment-input" style="flex-basis:75%;">
+                                <input type="text" name="" id="" class="comment-input-style comment-submit" style="" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>" placeholder="Write a comment...">
+                            </div>
+                            <div class="comment-input-option ">
+                                <div class="imoji-action align-middle">
+                                    <img src="<?php echo ''.BASE_URL.'/assets/images/emojiAction.JPG'; ?>" alt="">
+                                </div>
+                                <div class="cam-action align-middle">
+                                    <img src="<?php echo ''.BASE_URL.'/assets/images/commentCamera.JPG'; ?>" alt="">
+                                </div>
+                                <div class="gif-action align-middle">
+                                    <img src="<?php echo ''.BASE_URL.'/assets/images/commentGif.JPG'; ?>" alt="">
+                                </div>
+                                <div class="sticker-action align-middle">
+                                    <img src="<?php echo ''.BASE_URL.'/assets/images/commentSticker.JPG'; ?>" alt="">
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -207,6 +235,27 @@ class Post extends User {
     }
     
    
+    public function lastCommentFetch($commentid){
+        $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentID = :commentid");
+			$stmt->bindParam(":commentid", $commentid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } 
+    
+    public function CommentFetch($postid){
+        $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid LIMIT 1, 10");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
 	public function addLike($user_id, $post_id, $get_id){

@@ -691,7 +691,7 @@ $profileData = $loadFromUser->userData($profileId);
                 } else if ($(sClass).hasClass('sad-react-click')) {
                     mainReactSub('sad', 'yellow', id);
                 } else if ($(sClass).hasClass('angry-react-click')) {
-                    mainReactSub('angry', 'angry', id);
+                    mainReactSub('angry', 'red', id);
                 } else {
                     console.log('not found');
                 }
@@ -709,9 +709,10 @@ $profileData = $loadFromUser->userData($profileId);
 
                 var postId = $(likeReactParent).data('postid');
                 var userId = $(likeReactParent).data('userid');
-                var likeAction = likeReactParent.find('.like-action');
-                var likeActionIcon = likeAction.find('.like-action-icon img');
+                var likeAction = $(likeReactParent).find('.like-action');
+                var likeActionIcon = $(likeAction).find('.like-action-icon img');
                 var spanClass = $(likeAction).find('.like-action-text').find('span');
+                //                $(likeAction).hide();
                 //                alert(nf_3);
                 //                spanClass.text(typeR);
                 if ($(spanClass).hasClass(reactColor)) {
@@ -719,6 +720,7 @@ $profileData = $loadFromUser->userData($profileId);
                     spanClass.text("Like");
                     $(likeActionIcon).attr("src", "assets/images/likeAction.JPG");
                     mainReactDelete(typeR, postId, userId, nf_3);
+
                     //                    reactCountDec(reactCount, reactNumText)
 
                 } else if ($(spanClass).attr('class') !== undefined) {
@@ -839,6 +841,8 @@ $profileData = $loadFromUser->userData($profileId);
             /////////////.........comment part start..............///////
 
 
+
+
             $('.comment-submit').keyup(function(e) {
                 if (e.keyCode == 13) {
                     var inputNull = $(this);
@@ -862,7 +866,7 @@ $profileData = $loadFromUser->userData($profileId);
                             cache: false,
                             success: function(html) {
                                 $(commentPlaceholder).append(html);
-                                console.log(html);
+                                //                                console.log(html);
                                 $(inputNull).val('');
                             }
                         });
@@ -870,6 +874,137 @@ $profileData = $loadFromUser->userData($profileId);
                     }
                 }
             });
+            $(".com-like-react").hover(function() {
+                var mainReact = $(this).find('.com-react-bundle-wrap');
+                $(mainReact).html('<div class="react-bundle align-middle" style="position:absolute;margin-top: -45px; margin-left: -40px; display:flex; background-color:white;padding: 0 2px;border-radius: 25px; box-shadow: 0px 0px 5px black; height:45px; width:270px; justify-content:space-around; transition: 0.3s;z-index:2"><div class="com-like-react-click align-middle"><img class="com-main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/like.png "; ?>" alt=""></div><div class="com-love-react-click align-middle"><img class="com-main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/love.png "; ?>" alt=""></div><div class="com-haha-react-click align-middle"><img class="com-main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/haha.png "; ?>" alt=""></div><div class="com-wow-react-click align-middle"><img class="com-main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/wow.png "; ?>" alt=""></div><div class="com-sad-react-click align-middle"><img class="com-main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/sad.png "; ?>" alt=""></div><div class="com-angry-react-click align-middle"><img class="com-main-icon-css" src="<?php echo " ".BASE_URL."assets/images/react/angry.png "; ?>" alt=""></div></div>');
+            }, function() {
+                var mainReact = $(this).find('.com-react-bundle-wrap');
+                $(mainReact).html('');
+            });
+            $(document).on('click', '.com-main-icon-css', function() {
+                var com_bundle = $(this).parents('.com-react-bundle-wrap');
+                var commentID = $(com_bundle).data('commentid');
+                var likeReact = $(this).parent();
+                comReactApply(likeReact, commentID);
+            });
+
+            function comReactApply(sClass, commentID) {
+                if ($(sClass).hasClass('com-like-react-click')) {
+                    comReactSub('like', 'blue', commentID);
+                } else if ($(sClass).hasClass('com-love-react-click')) {
+                    comReactSub('love', 'red', commentID);
+                } else if ($(sClass).hasClass('com-haha-react-click')) {
+                    comReactSub('haha', 'yellow', commentID);
+                } else if ($(sClass).hasClass('com-wow-react-click')) {
+                    comReactSub('wow', 'yellow', commentID);
+                } else if ($(sClass).hasClass('com-sad-react-click')) {
+                    comReactSub('sad', 'yellow', commentID);
+                } else if ($(sClass).hasClass('com-angry-react-click')) {
+                    comReactSub('angry', 'red', commentID);
+                } else {
+                    console.log('not found');
+                }
+            }
+
+            function comReactSub(typeR, color, commentID) {
+                var reactColor = '' + typeR + '-color';
+
+
+                var parentClass = $('.com-' + typeR + '-react-click.align-middle');
+
+                var grandParent = $(parentClass).parents(".com-like-react");
+                var postid = $(grandParent).data('postid');
+                var userid = $(grandParent).data('userid');
+                //                var commentid = $(grandParent).data('commentid');
+                var spanClass = $(grandParent).find('.com-like-action-text').find('span');
+                var com_nf_3 = $(grandParent).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+                if ($(spanClass).attr('class') !== undefined) {
+
+                    if ($(spanClass).hasClass(reactColor)) {
+                        $(spanClass).removeAttr('class');
+                        spanClass.text("Like");
+                        comReactDelete(typeR, postid, userid, commentID, com_nf_3);
+                    } else {
+                        $(spanClass).removeClass().addClass(reactColor);
+                        spanClass.text(typeR);
+                        comReactSubmit(typeR, postid, userid, commentID, com_nf_3);
+                    }
+
+
+
+
+                } else {
+                    $(spanClass).addClass(reactColor);
+                    spanClass.text(typeR);
+                    comReactSubmit(typeR, postid, userid, commentID, com_nf_3);
+                }
+
+
+
+            }
+
+            $(document).on('click', '.com-like-action-text', function() {
+
+                var thisParents = $(this).parents('.com-like-react');
+                var postId = $(thisParents).data('postid');
+                var userId = $(thisParents).data('userid');
+                var commentID = $(thisParents).data('commentid');
+                var typeText = $(thisParents).find('.com-like-action-text span');
+                var typeR = $(typeText).text();
+                var com_nf_3 = $(thisParents).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+                //                $(com_nf_3).hide();
+
+                //                reactNumText--;
+                var spanClass = $(thisParents).find('.com-like-action-text').find('span');
+                if ($(spanClass).attr('class') !== undefined) {
+
+                    $(spanClass).removeAttr('class');
+                    spanClass.text("Like");
+                    comReactDelete(typeR, postId, userId, commentID, com_nf_3);
+                    //                        reactCountDec(reactCount, reactNumText, reactIcon)
+                    //                    alert('2');
+
+                } else {
+                    $(spanClass).addClass('like-color');
+                    //                    $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
+                    spanClass.text("Like");
+                    comReactSubmit(typeR, postId, userId, commentID, com_nf_3);
+                    //                    alert('3');
+                    //                    reactCountInc(postId, reactCount, reactNumText)
+                }
+            })
+
+            function comReactSubmit(typeR, postId, userId, commentID, com_nf_3) {
+
+                $.post('http://localhost/facebook/core/ajax/commentReact.php', {
+                    commentid: commentID,
+                    reactType: typeR,
+                    postId: postId,
+                    userId: userId
+
+
+                }, function(data) {
+                    $(com_nf_3).empty().html(data);
+                    console.log(data);
+                });
+
+            }
+
+            function comReactDelete(typeR, postId, userId, commentID, com_nf_3) {
+                $.post('http://localhost/facebook/core/ajax/commentReact.php', {
+                    delcommentid: commentID,
+                    deleteReactType: typeR,
+                    postId: postId,
+                    userId: userId
+
+
+                }, function(data) {
+                    //                    alert(data);
+                    $(com_nf_3).empty().html(data);
+                });
+            }
+
+
 
 
 
@@ -905,8 +1040,12 @@ $profileData = $loadFromUser->userData($profileId);
 
 
             /////////////.........comment part end..............///////
+            ////////////////........Start comment React Part............/////////
 
 
+
+
+            ////////////////........End comment React............/////////
 
         });
 

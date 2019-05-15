@@ -166,8 +166,53 @@ class Post extends User {
                             </li>
 
 
+
                             <?php
     } ?>
+                                <li class="new-comment">
+                                    <div class="com-details">
+                                        <div class="com-pro-pic">
+                                            <a href="#">
+                                                <div class="top-pic"><img src="user/24/profilePhoto/child4.jpg" alt=""></div>
+                                            </a>
+                                        </div>
+                                        <div class="com-pro-wrap">
+                                            <div class="com-pro-text align-middle">
+                                                <a href="#"><span class="nf-pro-name">km Habib</span></a>
+                                                <div class="com-react-placeholder-wrap align-middle">
+                                                    <div class="com-text" style="margin-left:5px;">This is demo comment</div>
+                                                    <div class="com-nf-3-wrap">
+                                                        <div class="com-nf-3 align-middle">
+                                                            <div class="nf-3-react-icon">
+                                                                <div class="react-inst-img align-middle" style="">
+                                                                    <img class="love-max-show" src="assets/images/react/love.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;z-index:1;"><img class="sad-max-show" src="assets/images/react/sad.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;margin-left:-5px;">
+
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="nf-3-react-username" style="font-size:10px;">
+
+                                                                2
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="com-react">
+
+                                                <div class="com-like-react" data-postid="<?php echo $comment->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $comment->commentID; ?>">
+                                                    <div class="com-react-bundle-wrap" data-commentid="<?php  echo $comment->commentID; ?>"></div>
+
+                                                    <div class="com-like-action-text"><span>Like</span></div>
+
+                                                </div>
+                                                <div class="com-reply-action">Reply</div>
+                                                <div class="com-time"> 11h </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                         </ul>
                     </div>
                     <div class="comment-write">
@@ -222,14 +267,29 @@ class Post extends User {
 			return $stmt->fetch(PDO::FETCH_OBJ);
     }    
     public function react_max_show($postid){
-        $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid GROUP by reactType LIMIT 3;");
+        $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = '0' AND `reactReplyOn` = '0' GROUP by reactType LIMIT 3;");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     } 
     public function main_react_count($postid){
-        $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid;");
+        $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = '0' AND `reactReplyOn` = '0';");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    } 
+    
+    public function com_react_max_show($postid,$commentid){
+        $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = '0' GROUP by reactType LIMIT 3");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->bindParam(":commentID", $commentid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } 
+    public function com_main_react_count($postid,$commentid){
+        $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = '0';");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+        	$stmt->bindParam(":commentID", $commentid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
     }

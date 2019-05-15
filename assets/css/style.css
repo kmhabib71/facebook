@@ -21,36 +21,41 @@ li {
 .like-color {
     color: #4267B2;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .love-color {
     color: #f63459;
-    ;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .haha-color {
     color: #fbdb68;
     ;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .wow-color {
     color: #fbdb68;
     ;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .sad-color {
     color: #fbdb68;
     ;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .angry-color {
     color: #e4605a;
     ;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .reactIconSize {
@@ -696,7 +701,7 @@ input#main-search {
     background-color: #f2f3f5;
     border-bottom-left-radius: 20px;
     border-top-left-radius: 20px;
-    padding: 10px;
+    padding: 8px;
     font-size: 12px;
 }
 ul.add-comment {
@@ -715,13 +720,20 @@ li.new-comment {
 .com-nf-3.align-middle {
     position: absolute;
     right: 0;
-    margin-right: -4px;
-    margin-top: 15px;
+    margin-right: -27px;
+    margin-top: 7px;
     background-color: white;
     padding: 2px 3px;
     box-shadow: 0px 0px 3px grey;
     border-radius: 10px;
 }
+
+/*...Reply Start...*/
+.com-reply-action {
+    cursor: pointer;
+}
+
+/*...Reply end...*/
 
 /*................ end timeline.............*/
 

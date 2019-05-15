@@ -58,7 +58,7 @@ $loadFromUser->delete('react', array('reactBy' => $userID,'reactOn' => $postId,'
 
  $react_max_show = $loadFromPost->com_react_max_show($postId,$delcommentid);
 	$main_react_count = $loadFromPost->com_main_react_count($postId,$delcommentid);
-    if($main_react_count->maxreact == '0'){echo 'its empty';}else{
+    if($main_react_count->maxreact == '0'){}else{
     
     ?>
         <div class="com-nf-3 align-middle">

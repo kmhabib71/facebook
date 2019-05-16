@@ -14,7 +14,7 @@ $userID = $_POST['userId'];
     
 // $reactExist=$loadFromUser->reactExistingCheck($postId, $userID); 
 // $rex = COUNT($reactExist);
- $loadFromUser->delete('react', array('reactBy' => $userID,'reactOn' => $postId));
+ $loadFromUser->delete('react', array('reactBy' => $userID,'reactOn' => $postId,'reactCommentOn' => '0','reactReplyOn' => '0'));
       
 //if($rex < 1 ){ 
    $loadFromUser->create('react', array('reactBy' => $userID,'reactOn' => $postId,'reactType' => $reactType, 'reactTimeOn' => date('Y-m-d H:i:s'))); 
@@ -44,7 +44,7 @@ $deleteReactType = $_POST['deleteReactType'];
 $postId = $_POST['postId'];  
 $userID = $_POST['userId'];  
 
-$loadFromUser->delete('react', array('reactBy' => $userID,'reactOn' => $postId));
+$loadFromUser->delete('react', array('reactBy' => $userID,'reactOn' => $postId,'reactCommentOn' => '0','reactReplyOn' => '0'));
 
  $react_max_show = $loadFromPost->react_max_show($postId);
 	$main_react_count = $loadFromPost->main_react_count($postId)

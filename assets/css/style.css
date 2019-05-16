@@ -14,11 +14,21 @@ input:focus {
     outline: none;
 }
 
+ul {
+    padding: 0;
+}
+
 li {
     list-style: none;
 }
 
 .like-color {
+    color: #4267B2;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.Like-color {
     color: #4267B2;
     font-weight: 600;
     text-transform: capitalize;
@@ -703,6 +713,7 @@ input#main-search {
     border-top-left-radius: 20px;
     padding: 8px;
     font-size: 12px;
+    border-bottom: 1px solid #8080800f;
 }
 ul.add-comment {
     padding-left: 0;
@@ -730,6 +741,41 @@ li.new-comment {
 
 /*...Reply Start...*/
 .com-reply-action {
+    cursor: pointer;
+}
+.com-pro-wrap {
+    width: 100%;
+}
+.com-text-react-wrap {
+    width: fit-content;
+}
+.reply-wrap {
+    width: 100%;
+}
+.reply-write {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+.reply-input {
+    width: 100%;
+    background-color: #f2f3f5;
+    display: flex;
+    border-radius: 25px;
+    border: 1px solid #8672723d;
+}
+.reply-input-style {
+    width: 100%;
+    border: none;
+    height: 15px;
+    background-color: #f2f3f5;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    padding: 8px;
+    font-size: 12px;
+    /*    border-bottom: 1px solid #8080800f;*/
+}
+.reply-like-action-text {
     cursor: pointer;
 }
 

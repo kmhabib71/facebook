@@ -145,6 +145,8 @@ class Post extends User {
                  
                                    $com_react_max_show = $this->com_react_max_show($comment->commentOn,$comment->commentID);
 	                               $main_react_count = $this->com_main_react_count($comment->commentOn,$comment->commentID);
+	                               $commentReactCheck = $this->commentReactCheck($user_id,$comment->commentOn,$comment->commentID);
+                  
         
         ?>
                             <li class="new-comment">
@@ -155,58 +157,195 @@ class Post extends User {
                                         </a>
                                     </div>
                                     <div class="com-pro-wrap">
-                                        <div class="com-pro-text align-middle">
-                                            <a href="#"><span class="nf-pro-name"><?php echo ''.$comment->firstName.' '.$comment->lastName.''; ?></span></a>
-                                            <div class="com-react-placeholder-wrap align-middle">
-                                                <div class="com-text" style="margin-left:5px;">
-                                                    <?php echo $comment->comment; ?>
-                                                </div>
-                                                <div class="com-nf-3-wrap">
-                                                    <?php
+                                        <div class="com-text-react-wrap">
+                                            <div class="com-pro-text align-middle">
+                                                <a href="#"><span class="nf-pro-name"><?php echo ''.$comment->firstName.' '.$comment->lastName.''; ?></span></a>
+                                                <div class="com-react-placeholder-wrap align-middle">
+                                                    <div class="com-text" style="margin-left:5px;">
+                                                        <?php echo $comment->comment; ?>
+                                                    </div>
+                                                    <div class="com-nf-3-wrap">
+                                                        <?php
   
-                                                    if($main_react_count->maxreact == '0'){echo 'its empty';}else{
+                                                    if($main_react_count->maxreact == '0'){}else{
     
                                                             ?>
-                                                        <div class="com-nf-3 align-middle">
-                                                            <div class="nf-3-react-icon">
-                                                                <div class="react-inst-img align-middle" style="">
-                                                                    <?php 
+                                                            <div class="com-nf-3 align-middle">
+                                                                <div class="nf-3-react-icon">
+                                                                    <div class="react-inst-img align-middle" style="">
+                                                                        <?php 
                                                             foreach($com_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="nf-3-react-username">
+                                                                    <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
                                                                 </div>
                                                             </div>
-                                                            <div class="nf-3-react-username">
-                                                                <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
-                                                            </div>
-                                                        </div>
-                                                        <?php   
+                                                            <?php   
     }
                     ?>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="com-react">
+
+                                                <div class="com-like-react " data-postid="<?php echo $comment->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $comment->commentID; ?>">
+                                                    <div class="com-react-bundle-wrap" data-commentid="<?php  echo $comment->commentID; ?>"></div>
+
+                                                    <?php if(empty($commentReactCheck)){echo '<div class="com-like-action-text"><span>Like</span></div>';}else{
+                        echo '<div class="com-like-action-text"><span class="'.$commentReactCheck->reactType.'-color">'.$commentReactCheck->reactType.'</span></div>';
+                    }
+?>
+                                                </div>
+                                                <div class="com-reply-action" data-postid="<?php echo $post->post_id; ?>" data-userid="
+                                                    <?php echo $user_id; ?>" data-commentid="
+                                                    <?php echo $comment->commentID; ?>" data-profilepic="<?php echo $post->profilePic; ?>">Reply</div>
+                                                <div class="com-time"> 11h </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="reply-wrap">
+                                            <div class="reply-text-wrap">
+                                                <ul class="old-replay">
+
+
+                                                    <?php
+                                                    $replyDetails=$this->replyFetch($comment->commentOn,$comment->commentID);
+
+
+    foreach($replyDetails as $reply){
+        $reply_react_max_show = $this->reply_react_max_show($reply->commentOn,$reply->commentID,$reply->commentReplyID);
+	    $reply_react_count = $this->reply_main_react_count($reply->commentOn,$reply->commentID,$reply->commentReplyID);
+        $replytReactCheck = $this->replyReactCheck($user_id,$reply->commentOn,$reply->commentID,$reply->commentReplyID);
+        
+        ?>
+                                                        <li class="new-reply" style="margin-top:5px;">
+                                                            <!--                                                        ///.......demo reply comment......////-->
+
+
+                                                            <div class="com-details">
+                                                                <div class="com-pro-pic">
+                                                                    <a href="#">
+                                                                        <div class="top-pic"><img src="<?php echo $reply->profilePic; ?>" alt=""></div>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="com-pro-wrap">
+                                                                    <div class="com-text-react-wrap">
+                                                                        <div class="com-pro-text align-middle">
+                                                                            <a href="#"><span class="nf-pro-name"><?php echo ''.$reply->firstName.' '.$reply->lastName.''; ?></span></a>
+                                                                            <div class="com-react-placeholder-wrap align-middle">
+                                                                                <div class="com-text" style="margin-left:5px;">
+                                                                                    <?php echo $reply->comment; ?>
+                                                                                </div>
+                                                                                <div class="com-nf-3-wrap">
+                                                                                    <?php
+                                if($reply_react_count->maxreact == '0'){}else{
+    
+                                                            ?>
+                                                                                        <div class="com-nf-3 align-middle">
+                                                                                            <div class="nf-3-react-icon">
+                                                                                                <div class="react-inst-img align-middle" style="">
+                                                                                                    <?php 
+                                                            foreach($reply_react_max_show as $react_max){
+                                                                echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
+                                                                 } ?> </div>
+                                                                                            </div>
+                                                                                            <div class="nf-3-react-username">
+                                                                                                <?php if($reply_react_count->maxreact == '0'){}else{echo $reply_react_count->maxreact;} ?>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <?php   
+    }
+                    ?>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="com-react">
+
+                                                                            <div class="com-like-react reply" data-postid="<?php echo $reply->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $reply->commentID; ?>" data-commentparentid="<?php  echo $reply->commentReplyID; ?>">
+                                                                                <div class="com-react-bundle-wrap reply" data-commentid="<?php  echo $reply->commentID; ?>" data-commentparentid="<?php  echo $reply->commentReplyID; ?>"></div>
+
+                                                                                <?php if(empty($replytReactCheck)){echo '<div class="reply-like-action-text"><span>Like</span></div>';}else{
+                        echo '<div class="reply-like-action-text"><span class="'.$replytReactCheck->reactType.'-color">'.$replytReactCheck->reactType.'</span></div>';
+                    }
+?>
+
+
+                                                                            </div>
+                                                                            <div class="com-reply-action-child" style="cursor:pointer;" data-postid="<?php echo $reply->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $reply->commentReplyID; ?>" data-profilepic="<?php  echo $reply->profilePic; ?>">Reply</div>
+                                                                            <div class="com-time"> 11h </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+
+
+                                                            <!--                                                        ///.......demo reply comment......////-->
+
+
+                                                        </li>
+
+
+                                                        <?php
+    }
+                    
+                    ?>
+
+                                                </ul>
+                                            </div>
+                                            <div class="replyInput">
+
+
+                                            </div>
+                                        </div>
+                                        <!--
+                                        <div class="reply-wrap">
+                                            <div class="reply-text-wrap">
+                                                <ul class="old-replay">
+                                                    <li class="new-reply">This is reply text </li>
+                                                </ul>
+                                            </div>
+                                            <div class="replyInput">
+                                                <div class="comment-write">
+                                                    <div class="com-pro-pic" style="margin-top: 4px;">
+                                                        <a href="#">
+                                                            <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="com-input" style="">
+                                                        <div class="comment-input" style="flex-basis:75%;">
+                                                            <input type="text" name="" id="" class="comment-input-style comment-submit" style="" data-postid="<?php echo $post->post_id; ?>" data-userid="
+                                                    <?php echo $user_id; ?>" placeholder="Write a comment...">
+                                                </div>
+                                                <div class="comment-input-option ">
+                                                    <div class="imoji-action align-middle">
+                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/emojiAction.JPG'; ?>" alt="">
+                                                    </div>
+                                                    <div class="cam-action align-middle">
+                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/commentCamera.JPG'; ?>" alt="">
+                                                    </div>
+                                                    <div class="gif-action align-middle">
+                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/commentGif.JPG'; ?>" alt="">
+                                                    </div>
+                                                    <div class="sticker-action align-middle">
+                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/commentSticker.JPG'; ?>" alt="">
+                                                    </div>
                                                 </div>
 
                                             </div>
                                         </div>
-                                        <div class="com-react">
 
-                                            <div class="com-like-react" data-postid="<?php echo $comment->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $comment->commentID; ?>">
-                                                <div class="com-react-bundle-wrap" data-commentid="<?php  echo $comment->commentID; ?>"></div>
-
-                                                <div class="com-like-action-text"><span>Like</span></div>
-
-                                            </div>
-                                            <div class="com-reply-action">Reply</div>
-                                            <div class="com-time"> 11h </div>
-                                        </div>
-                                        <div class="reply-wrap">
-                                            <div class="reply-text-wrap">
-                                                <ul class="old-replay">
-                                                    <li class="new-reply"></li>
-                                                </ul>
-                                            </div>
+                                    </div>
 
 
-                                        </div>
+                                </div>
+                                -->
                                     </div>
 
                                 </div>
@@ -290,6 +429,14 @@ class Post extends User {
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     } 
+    public function reply_react_max_show($postid,$commentid,$replyid){
+        $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = :replyid GROUP by reactType LIMIT 3");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->bindParam(":commentID", $commentid, PDO::PARAM_INT);
+			$stmt->bindParam(":replyid", $replyid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } 
     public function com_main_react_count($postid,$commentid){
         $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = '0';");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
@@ -297,7 +444,32 @@ class Post extends User {
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
     }
-    
+    public function reply_main_react_count($postid,$commentid, $replyid){
+        $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = :replyid;");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+        	$stmt->bindParam(":commentID", $commentid, PDO::PARAM_INT);
+        	$stmt->bindParam(":replyid", $replyid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function commentReactCheck($userid, $postid, $commentID){
+        $stmt = $this->pdo->prepare("SELECT * FROM `react` WHERE `reactBy` = :user_id AND `reactOn` = :postid AND  `reactCommentOn` = :commentid AND `reactReplyOn` = '0'");
+			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->bindParam(":commentid", $commentID, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }  
+    public function replyReactCheck($userid, $postid, $commentID, $replyID){
+        $stmt = $this->pdo->prepare("SELECT * FROM `react` WHERE `reactBy` = :user_id AND `reactOn` = :postid AND  `reactCommentOn` = :commentid AND `reactReplyOn` = :replyid");
+			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->bindParam(":commentid", $commentID, PDO::PARAM_INT);
+			$stmt->bindParam(":replyid", $replyID, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    } 
    
     public function lastCommentFetch($commentid){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentID = :commentid");
@@ -305,10 +477,24 @@ class Post extends User {
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     } 
+    public function lastReplyFetch($replyid){
+        $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentID = :replyid");
+			$stmt->bindParam(":replyid", $replyid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } 
     
     public function CommentFetch($postid){
-        $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid LIMIT 1, 10");
+        $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid AND comments.commentReplyID = '0' LIMIT 10");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } 
+    
+    public function replyFetch($postid,$commentID){
+        $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid AND comments.commentReplyID = :commentid LIMIT 10");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->bindParam(":commentid", $commentID, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }

@@ -841,8 +841,9 @@ $profileData = $loadFromUser->userData($profileId);
             /////////////.........comment part start..............///////
 
 
-
-
+            $(document).on('click', '.comment-action', function() {
+                var nf_4 = $(this).parents('.nf-4').siblings('.nf-5').find('input.comment-input-style.comment-submit').focus();
+            })
             $('.comment-submit').keyup(function(e) {
                 if (e.keyCode == 13) {
                     var inputNull = $(this);
@@ -887,10 +888,8 @@ $profileData = $loadFromUser->userData($profileId);
                 });
             }
 
-
-
-
             $(document).on('click', '.com-main-icon-css', function() {
+
                 var com_bundle = $(this).parents('.com-react-bundle-wrap');
                 var commentID = $(com_bundle).data('commentid');
                 var likeReact = $(this).parent();
@@ -1017,48 +1016,272 @@ $profileData = $loadFromUser->userData($profileId);
 
 
 
-            //function AjaxSendForm(url, placeholder, form, append) {
-            //var data = $(form).serialize();
-            //append = (append === undefined ? false : true); // whatever, it will evaluate to true or false only
-            //$.ajax({
-            //    type: 'POST',
-            //    url: url,
-            //    data: data,
-            //    beforeSend: function() {
-            //        // setting a timeout
-            //        $(placeholder).addClass('loading');
-            //    },
-            //    success: function(data) {
-            //        if (append) {
-            //            $(placeholder).append(data);
-            //        } else {
-            //            $(placeholder).html(data);
-            //        }
-            //    },
-            //    error: function(xhr) { // if error occured
-            //        alert("Error occured.please try again");
-            //        $(placeholder).append(xhr.statusText + xhr.responseText);
-            //        $(placeholder).removeClass('loading');
-            //    },
-            //    complete: function() {
-            //        $(placeholder).removeClass('loading');
-            //    },
-            //    dataType: 'html'
-            //});
-            //}
-
-
             /////////////.........comment part end..............///////
-            ////////////////........Start comment React Part............/////////
+
+            ////////////////........Reply Part Start ............/////////
+
+
+
+            $(document).on('click', '.com-reply-action', function() {
+                $('.reply-input').empty();
+                $('.reply-write').hide();
+                var BASE_URL = 'http://localhost/facebook';
+                var userid = $(this).data('userid');
+                var postid = $(this).data('postid');
+                var commentid = $(this).data('commentid');
+                var profilePic = $(this).data('profilepic');
+                var input_field = $(this).parents('.com-text-react-wrap').siblings('.reply-wrap').find('.replyInput');
+                $('.input_field').hide();
+                input_field.html('<div class="reply-write"><div class="com-pro-pic" style="margin-top: 4px;"><a href="#"><div class="top-pic"><img src="' + profilePic + '" alt=""></div></a></div><div class="com-input" style=""><div class="reply-input" style="flex-basis:75%;"><input type="text" name="" id="" class="reply-input-style reply-submit" style="" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '" placeholder="Write a reply..."></div><div class="comment-input-option "><div class="imoji-action align-middle"><img src="' + BASE_URL + '/assets/images/emojiAction.JPG" alt=""></div><div class="cam-action align-middle"><img src="' + BASE_URL + '/assets/images/commentCamera.JPG" alt=""></div><div class="gif-action align-middle"><img src="' + BASE_URL + '/assets/images/commentGif.JPG" alt=""></div><div class="sticker-action align-middle"><img src="' + BASE_URL + '/assets/images/commentSticker.JPG" alt=""></div></div></div></div>');
+                replyInput(input_field)
+
+            });
+
+            $(document).on('click', '.com-reply-action-child', function() {
+                $('.reply-input').empty();
+                $('.reply-write').hide();
+                var BASE_URL = 'http://localhost/facebook';
+                var userid = $(this).data('userid');
+                var postid = $(this).data('postid');
+                var commentid = $(this).data('commentid');
+                //                var replyid = $(this).data('replyid');
+                var profilePic = $(this).data('profilepic');
+                var input_field = $(this).parents('.reply-wrap').find('.replyInput');
+                $('.input_field').hide();
+                input_field.html('<div class="reply-write"><div class="com-pro-pic" style="margin-top: 4px;"><a href="#"><div class="top-pic"><img src="' + profilePic + '" alt=""></div></a></div><div class="com-input" style=""><div class="reply-input" style="flex-basis:75%;"><input type="text" name="" id="" class="reply-input-style reply-submit" style="" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '" placeholder="Write a reply..."></div><div class="comment-input-option "><div class="imoji-action align-middle"><img src="' + BASE_URL + '/assets/images/emojiAction.JPG" alt=""></div><div class="cam-action align-middle"><img src="' + BASE_URL + '/assets/images/commentCamera.JPG" alt=""></div><div class="gif-action align-middle"><img src="' + BASE_URL + '/assets/images/commentGif.JPG" alt=""></div><div class="sticker-action align-middle"><img src="' + BASE_URL + '/assets/images/commentSticker.JPG" alt=""></div></div></div></div>');
+                replyInput(input_field)
+
+            });
+            replyInput()
+
+            function replyInput(input_field) {
+                $(input_field).find('input.reply-input-style.reply-submit').focus();
+                $('input.reply-input-style.reply-submit').keyup(function(e) {
+                    if (e.keyCode == 13) {
+                        var inputNull = $(this);
+                        var comment = $(this).val();
+                        var postid = $(this).data('postid');
+                        var userid = $(this).data('userid');
+                        var commentid = $(this).data('commentid');
+
+                        var replyPlaceholder = $(this).parents('.replyInput').siblings('.reply-text-wrap').find('.old-replay');
+                        if (comment == '') {
+                            alert("Please Enter Some Text");
+                        } else {
+
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost/facebook/core/ajax/reply.php",
+                                data: {
+                                    replyComment: comment,
+                                    userid: userid,
+                                    postid: postid,
+                                    commentid: commentid
+                                },
+                                cache: false,
+                                success: function(html) {
+                                    $(replyPlaceholder).append(html);
+                                    //                                console.log(html);
+                                    $(inputNull).val('');
+                                    replyHover()
+                                }
+                            });
+
+                        }
+                    }
+                });
+            }
+            replyHover()
+
+            function replyHover() {
+                $(".com-like-react.reply").hover(function() {
+                    var mainReact = $(this).find('.com-react-bundle-wrap.reply');
+                    $(mainReact).html('<div class="react-bundle  align-middle" style="position:absolute;margin-top: -45px; margin-left: -40px; display:flex; background-color:white;padding: 0 2px;border-radius: 25px; box-shadow: 0px 0px 5px black; height:45px; width:270px; justify-content:space-around; transition: 0.3s;z-index:2"><div class="com-like-react-click  align-middle"><img class="reply-main-icon-css " src="<?php echo " ".BASE_URL."assets/images/react/like.png "; ?>" alt=""></div><div class="com-love-react-click align-middle"><img class="reply-main-icon-css " src="<?php echo " ".BASE_URL."assets/images/react/love.png "; ?>" alt=""></div><div class="com-haha-react-click  align-middle"><img class="reply-main-icon-css " src="<?php echo " ".BASE_URL."assets/images/react/haha.png "; ?>" alt=""></div><div class="com-wow-react-click  align-middle"><img class="reply-main-icon-css " src="<?php echo " ".BASE_URL."assets/images/react/wow.png "; ?>" alt=""></div><div class="com-sad-react-click  align-middle"><img class="reply-main-icon-css " src="<?php echo " ".BASE_URL."assets/images/react/sad.png "; ?>" alt=""></div><div class="com-angry-react-click  align-middle"><img class="reply-main-icon-css " src="<?php echo " ".BASE_URL."assets/images/react/angry.png "; ?>" alt=""></div></div>');
+                }, function() {
+                    var mainReact = $(this).find('.com-react-bundle-wrap.reply');
+                    $(mainReact).html('');
+                });
+            }
+
+            $(document).on('click', '.reply-main-icon-css', function() {
+
+                var com_bundle = $(this).parents('.com-react-bundle-wrap.reply');
+                var commentID = $(com_bundle).data('commentid');
+                var commentparentid = $(com_bundle).data('commentparentid');
+                var likeReact = $(this).parent();
+                replyReactApply(likeReact, commentID, commentparentid);
+
+            });
+
+            function replyReactApply(sClass, commentID, commentparentid) {
+                if ($(sClass).hasClass('com-like-react-click')) {
+                    replyReactSub('like', 'blue', commentID, commentparentid);
+                } else if ($(sClass).hasClass('com-love-react-click')) {
+                    replyReactSub('love', 'red', commentID, commentparentid);
+                } else if ($(sClass).hasClass('com-haha-react-click')) {
+                    replyReactSub('haha', 'yellow', commentID, commentparentid);
+                } else if ($(sClass).hasClass('com-wow-react-click')) {
+                    replyReactSub('wow', 'yellow', commentID, commentparentid);
+                } else if ($(sClass).hasClass('com-sad-react-click')) {
+                    replyReactSub('sad', 'yellow', commentID, commentparentid);
+                } else if ($(sClass).hasClass('com-angry-react-click')) {
+                    replyReactSub('angry', 'red', commentID, commentparentid);
+                } else {
+                    console.log('not found');
+                }
+            }
+
+            function replyReactSub(typeR, color, commentID, commentparentid) {
+                var reactColor = '' + typeR + '-color';
+
+                var parentClass = $('.com-' + typeR + '-react-click.align-middle');
+
+                var grandParent = $(parentClass).parents(".com-like-react");
+                var postid = $(grandParent).data('postid');
+                var userid = $(grandParent).data('userid');
+                //                var commentid = $(grandParent).data('commentid');
+                var spanClass = $(grandParent).find('.reply-like-action-text').find('span');
+                var com_nf_3 = $(grandParent).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+
+                if ($(spanClass).attr('class') !== undefined) {
+
+                    if ($(spanClass).hasClass(reactColor)) {
+                        $(spanClass).removeAttr('class');
+                        spanClass.text("Like");
+                        replyReactDelete(typeR, postid, userid, commentID, commentparentid, com_nf_3);
+
+                    } else {
+                        $(spanClass).removeClass().addClass(reactColor);
+                        spanClass.text(typeR);
+                        replyReactSubmit(typeR, postid, userid, commentID, commentparentid, com_nf_3);
+
+                    }
 
 
 
 
-            ////////////////........End comment React............/////////
+                } else {
+                    $(spanClass).addClass(reactColor);
+                    spanClass.text(typeR);
+                    replyReactSubmit(typeR, postid, userid, commentID, commentparentid, com_nf_3);
+
+                }
+
+
+
+            }
+
+            $(document).on('click', '.reply-like-action-text', function() {
+
+                var thisParents = $(this).parents('.com-like-react');
+                var postId = $(thisParents).data('postid');
+                var userId = $(thisParents).data('userid');
+                var commentID = $(thisParents).data('commentid');
+                var commentparentid = $(thisParents).data('commentparentid');
+                var typeText = $(thisParents).find('.reply-like-action-text span');
+                var typeR = $(typeText).text();
+                var reactColor = '' + typeR + '-color';
+                var com_nf_3 = $(thisParents).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+                //                $(com_nf_3).hide();
+
+                //                reactNumText--;
+                var spanClass = $(thisParents).find('.reply-like-action-text').find('span');
+
+                if ($(spanClass).attr('class') !== undefined) {
+
+                    if ($(spanClass).hasClass(reactColor)) {
+                        $(spanClass).removeAttr('class');
+                        spanClass.text("Like");
+                        replyReactDelete(typeR, postId, userId, commentID, commentparentid, com_nf_3);
+
+                    } else {
+                        $(spanClass).removeClass().addClass(reactColor);
+                        spanClass.text(typeR);
+                        replyReactSubmit(typeR, postId, userId, commentID, commentparentid, com_nf_3);
+
+                    }
+
+
+
+
+                } else {
+                    $(spanClass).addClass(reactColor);
+                    //                    $(likeActionIcon).attr("src", "assets/images/react/like.png").addClass('reactIconSize');
+                    spanClass.text("Like");
+                    replyReactSubmit(typeR, postId, userId, commentID, commentparentid, com_nf_3);
+                    //                    reactCountInc(postId, reactCount, reactNumText)
+
+                }
+            })
+
+            function replyReactSubmit(typeR, postId, userId, commentID, commentparentid, com_nf_3) {
+
+                $.post('http://localhost/facebook/core/ajax/replyReact.php', {
+                    commentid: commentID,
+                    reactType: typeR,
+                    postId: postId,
+                    userId: userId,
+                    commentparentid: commentparentid
+
+
+
+                }, function(data) {
+                    $(com_nf_3).empty().html(data);
+                    //                    console.log(data);
+                });
+
+            }
+
+            function replyReactDelete(typeR, postId, userId, commentID, commentparentid, com_nf_3) {
+                $.post('http://localhost/facebook/core/ajax/replyReact.php', {
+                    delcommentid: commentID,
+                    deleteReactType: typeR,
+                    postId: postId,
+                    userId: userId,
+                    commentparentid: commentparentid
+
+
+                }, function(data) {
+                    //                    alert(data);
+                    $(com_nf_3).empty().html(data);
+                });
+            }
+
+
+
+            ////////////////........Reply Part End............/////////
 
         });
 
-
+        //function AjaxSendForm(url, placeholder, form, append) {
+        //var data = $(form).serialize();
+        //append = (append === undefined ? false : true); // whatever, it will evaluate to true or false only
+        //$.ajax({
+        //    type: 'POST',
+        //    url: url,
+        //    data: data,
+        //    beforeSend: function() {
+        //        // setting a timeout
+        //        $(placeholder).addClass('loading');
+        //    },
+        //    success: function(data) {
+        //        if (append) {
+        //            $(placeholder).append(data);
+        //        } else {
+        //            $(placeholder).html(data);
+        //        }
+        //    },
+        //    error: function(xhr) { // if error occured
+        //        alert("Error occured.please try again");
+        //        $(placeholder).append(xhr.statusText + xhr.responseText);
+        //        $(placeholder).removeClass('loading');
+        //    },
+        //    complete: function() {
+        //        $(placeholder).removeClass('loading');
+        //    },
+        //    dataType: 'html'
+        //});
+        //}
 
 
         $(document).mouseup(function(e) {

@@ -86,7 +86,7 @@ if (isset($_POST["first-name"]) && !empty($_POST["first-name"])){
                 $token=bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
                 //select userid from databse
                 $user_id=DB::query('SELECT user_id FROM users WHERE mobile=:mobile', array(':mobile'=>$email_mobile))[0]['user_id'];
-                    $loadFromUser->create('profile', array('userId' => $user_id,'birthday' => $birth,'firstName' => $first_name,'lastName' => $last_name, 'gender' => $upgen));
+                    $loadFromUser->create('profile', array('userId' => $user_id,'birthday' => $birth,'firstName' => $first_name,'lastName' => $last_name, 'profilePic' => 'assets/images/defaultProfile.png', 'coverPic' => 'assets/images/defaultCover.png', 'gender' => $upgen));
 //                $id = rand();  
 //                    echo $id;
 //                    echo sha1($token);
@@ -139,7 +139,7 @@ if (isset($_POST["first-name"]) && !empty($_POST["first-name"])){
                    $_SESSION['user_id'] = $user_id;
                 $cstrong = true;
                 $token=bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
-                $loadFromUser->create('profile', array('userId' => $user_id,'birthday' => $birth,'firstName' => $first_name,'lastName' => $last_name, 'gender' => $upgen));
+                $loadFromUser->create('profile', array('userId' => $user_id,'birthday' => $birth,'firstName' => $first_name,'lastName' => $last_name,'profilePic' => 'assets/images/defaultProfile.png', 'coverPic' => 'assets/images/defaultCover.png', 'gender' => $upgen));
             DB::query('INSERT INTO token VALUES(0, :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$user_id));
             // set cookies to computer for logged in snid=cookies name, $token = cookie token, time=how much time cookie active for login, 2nd NULL = cause we dont have ssl, if have then use true, true=for crose site scripting.
 //echo $user_id;

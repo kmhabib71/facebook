@@ -5,11 +5,13 @@ class Post extends User {
 	function __construct($pdo){
 		$this->pdo = $pdo;
 	}
-	public function posts($user_id, $num){
-		
-		$stmt = $this->pdo->prepare("SELECT users.*, post.*, profile.* from users, post, profile WHERE users.user_id = :user_id AND post.postBy = :user_id AND profile.userId =:user_id ORDER BY post.postedOn DESC LIMIT :num");
+	public function posts($user_id,$profileId, $num){
+
+ $userdata = $this->userData($user_id);
+
+		$stmt = $this->pdo->prepare("SELECT users.*, post.*, profile.* from users, post, profile WHERE users.user_id = :user_id AND post.postBy = :user_id AND profile.userId =:user_id  ORDER BY post.postedOn DESC LIMIT :num");
 //        $stmt = $this->pdo->prepare("SELECT * FROM posts LEFT JOIN users ON postBy = user_id WHERE postBy = :user_id AND repostID ='0' OR postBy = user_id AND repostBy != :user_id AND `postBy` IN(SELECT `receiver` FROM `follow` WHERE `sender` = :user_id) ORDER BY `postID` DESC LIMIT :num");
-		$stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+		$stmt->bindParam(":user_id", $profileId, PDO::PARAM_INT);
 		$stmt->bindParam(":num", $num, PDO::PARAM_INT);
 		$stmt->execute();
 		$posts = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -17,7 +19,7 @@ class Post extends User {
 			$main_react = $this->main_react($user_id, $post->post_id);
 			$react_max_show = $this->react_max_show($post->post_id);
 			$main_react_count = $this->main_react_count($post->post_id);
-			
+
 //			$repost = $this->checkRepost($post->postID, $user_id);
 //			$user = $this->userData($post->repostBy);
           $commentDetails=$this->CommentFetch($post->post_id);
@@ -47,25 +49,29 @@ class Post extends User {
                     </div>
                     <div class="nf-1-right">
                         <div class="nf-1-right-dott">
-                            ...
+                            <div class="post-option" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">...</div>
+
+                            <div class="post-option-details-container"></div>
+
+
                         </div>
 
                     </div>
                 </div>
                 <div class="nf-2">
-                    <div class="nf-2-text">
+                    <div class="nf-2-text" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">
                         <?php echo $post->post; ?>
                     </div>
-                    <div class="nf-2-img">
-                        <?php $imgJson = json_decode($post->postImage); 
+                    <div class="nf-2-img" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">
+                        <?php $imgJson = json_decode($post->postImage);
                             $count = 0;
                                 for($i = 0; $i < count($imgJson); $i++) {
                                     echo '<div class="post-img-box" data-postImgID="'.$post->id.'" style="max-height: 400px;
     overflow: hidden;"><img src="'.BASE_URL.$imgJson[''.$count++.'']->imageName.'" alt="" style="width: 100%;"></div>';
                                 }
-                                
-                        
-                        
+
+
+
                         ?>
                     </div>
 
@@ -73,16 +79,16 @@ class Post extends User {
                 <div class="nf-3">
                     <div class="nf-3-react-icon">
                         <div class="react-inst-img align-middle" style="">
-                            <?php 
-            
-            
-            
-            
+                            <?php
 
-                
+
+
+
+
+
                 foreach($react_max_show as $react_max){
                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:15px;width:15px;margin-right:2px;cursor:pointer;">';
-            
+
                  } ?>
 
 
@@ -142,12 +148,12 @@ class Post extends User {
                     <div class="comment-list">
                         <ul class="add-comment">
                             <?php foreach($commentDetails as $comment){
-                 
+
                                    $com_react_max_show = $this->com_react_max_show($comment->commentOn,$comment->commentID);
 	                               $main_react_count = $this->com_main_react_count($comment->commentOn,$comment->commentID);
 	                               $commentReactCheck = $this->commentReactCheck($user_id,$comment->commentOn,$comment->commentID);
-                  
-        
+
+
         ?>
                             <li class="new-comment">
                                 <div class="com-details">
@@ -166,14 +172,14 @@ class Post extends User {
                                                     </div>
                                                     <div class="com-nf-3-wrap">
                                                         <?php
-  
+
                                                     if($main_react_count->maxreact == '0'){}else{
-    
+
                                                             ?>
                                                             <div class="com-nf-3 align-middle">
                                                                 <div class="nf-3-react-icon">
                                                                     <div class="react-inst-img align-middle" style="">
-                                                                        <?php 
+                                                                        <?php
                                                             foreach($com_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?>
@@ -183,7 +189,7 @@ class Post extends User {
                                                                     <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
                                                                 </div>
                                                             </div>
-                                                            <?php   
+                                                            <?php
     }
                     ?>
                                                     </div>
@@ -202,7 +208,7 @@ class Post extends User {
                                                 </div>
                                                 <div class="com-reply-action" data-postid="<?php echo $post->post_id; ?>" data-userid="
                                                     <?php echo $user_id; ?>" data-commentid="
-                                                    <?php echo $comment->commentID; ?>" data-profilepic="<?php echo $post->profilePic; ?>">Reply</div>
+                                                    <?php echo $comment->commentID; ?>" data-profilepic="<?php echo $userdata->profilePic; ?>">Reply</div>
                                                 <div class="com-time"> 11h </div>
                                             </div>
                                         </div>
@@ -220,7 +226,7 @@ class Post extends User {
         $reply_react_max_show = $this->reply_react_max_show($reply->commentOn,$reply->commentID,$reply->commentReplyID);
 	    $reply_react_count = $this->reply_main_react_count($reply->commentOn,$reply->commentID,$reply->commentReplyID);
         $replytReactCheck = $this->replyReactCheck($user_id,$reply->commentOn,$reply->commentID,$reply->commentReplyID);
-        
+
         ?>
                                                         <li class="new-reply" style="margin-top:5px;">
                                                             <!--                                                        ///.......demo reply comment......////-->
@@ -243,12 +249,12 @@ class Post extends User {
                                                                                 <div class="com-nf-3-wrap">
                                                                                     <?php
                                 if($reply_react_count->maxreact == '0'){}else{
-    
+
                                                             ?>
                                                                                         <div class="com-nf-3 align-middle">
                                                                                             <div class="nf-3-react-icon">
                                                                                                 <div class="react-inst-img align-middle" style="">
-                                                                                                    <?php 
+                                                                                                    <?php
                                                             foreach($reply_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?> </div>
@@ -257,7 +263,7 @@ class Post extends User {
                                                                                                 <?php if($reply_react_count->maxreact == '0'){}else{echo $reply_react_count->maxreact;} ?>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <?php   
+                                                                                        <?php
     }
                     ?>
                                                                                 </div>
@@ -276,7 +282,7 @@ class Post extends User {
 
 
                                                                             </div>
-                                                                            <div class="com-reply-action-child" style="cursor:pointer;" data-postid="<?php echo $reply->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $reply->commentReplyID; ?>" data-profilepic="<?php  echo $reply->profilePic; ?>">Reply</div>
+                                                                            <div class="com-reply-action-child" style="cursor:pointer;" data-postid="<?php echo $reply->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $reply->commentReplyID; ?>" data-profilepic="<?php  echo $userdata->profilePic; ?>">Reply</div>
                                                                             <div class="com-time"> 11h </div>
                                                                         </div>
                                                                     </div>
@@ -294,7 +300,7 @@ class Post extends User {
 
                                                         <?php
     }
-                    
+
                     ?>
 
                                                 </ul>
@@ -361,7 +367,7 @@ class Post extends User {
                     <div class="comment-write">
                         <div class="com-pro-pic" style="margin-top: 4px;">
                             <a href="#">
-                                <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
+                                <div class="top-pic"><img src="<?php echo $userdata->profilePic; ?>" alt=""></div>
                             </a>
                         </div>
                         <div class="com-input" style="">
@@ -401,34 +407,34 @@ class Post extends User {
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
-    
+
     public function main_react($userid, $postid){
         $stmt = $this->pdo->prepare("SELECT * FROM `react` WHERE `reactBy` = :user_id AND `reactOn` = :postid AND  `reactCommentOn` = '0' AND `reactReplyOn` = '0'");
 			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
-    }    
+    }
     public function react_max_show($postid){
         $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = '0' AND `reactReplyOn` = '0' GROUP by reactType LIMIT 3;");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
-    } 
+    }
     public function main_react_count($postid){
         $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = '0' AND `reactReplyOn` = '0';");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
-    } 
-    
+    }
+
     public function com_react_max_show($postid,$commentid){
         $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = '0' GROUP by reactType LIMIT 3");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
 			$stmt->bindParam(":commentID", $commentid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
-    } 
+    }
     public function reply_react_max_show($postid,$commentid,$replyid){
         $stmt = $this->pdo->prepare("SELECT reactType, count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = :replyid GROUP by reactType LIMIT 3");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
@@ -436,7 +442,7 @@ class Post extends User {
 			$stmt->bindParam(":replyid", $replyid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
-    } 
+    }
     public function com_main_react_count($postid,$commentid){
         $stmt = $this->pdo->prepare("SELECT count(*) as maxreact from react WHERE reactOn = :postid AND reactCommentOn = :commentID AND  `reactReplyOn` = '0';");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
@@ -460,7 +466,7 @@ class Post extends User {
 			$stmt->bindParam(":commentid", $commentID, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
-    }  
+    }
     public function replyReactCheck($userid, $postid, $commentID, $replyID){
         $stmt = $this->pdo->prepare("SELECT * FROM `react` WHERE `reactBy` = :user_id AND `reactOn` = :postid AND  `reactCommentOn` = :commentid AND `reactReplyOn` = :replyid");
 			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
@@ -469,28 +475,28 @@ class Post extends User {
 			$stmt->bindParam(":replyid", $replyID, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
-    } 
-   
+    }
+
     public function lastCommentFetch($commentid){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentID = :commentid");
 			$stmt->bindParam(":commentid", $commentid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
-    } 
+    }
     public function lastReplyFetch($replyid){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentID = :replyid");
 			$stmt->bindParam(":replyid", $replyid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
-    } 
-    
+    }
+
     public function CommentFetch($postid){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid AND comments.commentReplyID = '0' LIMIT 10");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
-    } 
-    
+    }
+
     public function replyFetch($postid,$commentID){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid AND comments.commentReplyID = :commentid LIMIT 10");
 			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
@@ -498,16 +504,23 @@ class Post extends User {
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+public function postUpd($user_id, $post_id, $editText){
+			$stmt = $this->pdo->prepare("UPDATE `post` SET `post` = :editText WHERE `post_id` = :post_id AND `userId` = :user_id ");
+			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+    	   $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+    	   $stmt->bindParam(":editText", $editText, PDO::PARAM_INT);
+			$stmt->execute();
+
+		}
+
+
+
+
+
+
+
+
+
 	public function addLike($user_id, $post_id, $get_id){
 			$stmt = $this->pdo->prepare("UPDATE `posts` SET `likesCount` = `likesCount` +1 WHERE `postID` = :post_id");
 			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
@@ -563,7 +576,7 @@ class Post extends User {
 				foreach ($result as $trend) {
 					if($stmt = $this->pdo->prepare($sql)){
 						$stmt->execute(array(':hashtag' => $trend));
-					
+
 				}
 			}
 		}
@@ -584,7 +597,7 @@ class Post extends User {
 					Message::sendNotification($data->user_id, $user_id, $post_id, 'mention');
 
 				}
-			
+
 		}
 		public function getTweetLinks($post){
 			$post = preg_replace("/(https?:\/\/)([\w]+.)([\w\.]+)/", "<a href='$0' target='_blank'>$0</a>", $post );
@@ -678,7 +691,7 @@ class Post extends User {
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
 		}
-		
+
 }
 
 

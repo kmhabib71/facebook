@@ -8,40 +8,11 @@
 </head>
 
 <body>
-    <div class="top-box profile-dialog-show">
-        <div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; ">
-            <div class="edit-post-text">Edit Post</div>
-            <div class="edit-post-close" style="padding: 5px; color: gray;">x</div>
-        </div>
-        <div class="edit-post-value" style="border-bottom: 1px solid lightgray;">
-            <div class="status-med">
-                <div class="status-prof">
-                    <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
-                </div>
-                <div class="status-prof-textarea">
-                    <textarea data-autoresize rows="5" columns="5" placeholder="what's going in your mind?" name="textStatus" class="status align-middle"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px;">
-            <div class="status-privacy-wrap">
-                <div class="status-privacy  ">
-                    <div class="privacy-icon align-middle">
-                        <img src="assets/images/profile/publicIcon.JPG" alt="">
-                    </div>
-                    <div class="privacy-text">Public</div>
-                    <div class="privacy-downarrow-icon align-middle">
-                        <img src="assets/images/watchmore.png" alt="">
-                    </div>
-                </div>
-                <div class="status-privacy-option">
+    SELECT users.*, post.*, profile.* from users, post, profile WHERE (users.user_id = 30 AND post.postBy = 30 AND profile.userId = 30 AND post.post_id != (select post.post_id from post where post.postBy = 30 AND post.shareId != 'NULL') ) OR (users.user_id = 30 AND profile.userId =30 AND (post.sharedBy = 30 OR post.postBy =30 ) ) ORDER BY post.postedOn DESC LIMIT 10
 
-                </div>
-            </div>
-            <div class="edit-post-save" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px;">Save</div>
-        </div>
 
-    </div>
+
+
 
 </body>
 

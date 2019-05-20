@@ -553,9 +553,6 @@ $profileData = $loadFromUser->userData($profileId);
                     //                alert(statusText);
 
                 })
-
-
-
                 $('.add-cover-photo').on("click", function() {
                     $('.add-cov-opt').toggle()
                 })
@@ -687,11 +684,6 @@ $profileData = $loadFromUser->userData($profileId);
                     var mainReact = $(this).find('.react-bundle-wrap');
                     $(mainReact).html('');
                 });
-
-
-
-
-
                 $(document).on('click', '.main-icon-css', function() {
                     var likeReact = $(this).parent();
                     reactApply(likeReact);
@@ -839,7 +831,44 @@ $profileData = $loadFromUser->userData($profileId);
                     }
                 })
 
+                /////////////.........Share part start..............///////////
 
+                $(document).on('click', '.share-action', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+                    var profilePic = $(this).data('profilepic');
+                    var nf_1 = $(this).parents('.nf-4').siblings('.nf-1').html();
+                    var nf_2 = $(this).parents('.nf-4').siblings('.nf-2').html();
+                    console.log(postid, userid, profileid);
+                    $('.top-box-show').html(' <div class="top-box profile-dialog-show" style="overflow: hidden;background-color: rgb(236, 236, 236);"> <div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; "> <div class="edit-post-text">Share Post</div> <div class="edit-post-close" style="padding: 5px; color: gray; cursor:pointer;">x</div> </div> <div class="edit-post-value" style=""> <div class="status-med"> <div class="status-prof"> <div class="top-pic"><img src="' + profilePic + '" alt=""></div> </div> <div class="status-prof-textarea"> <textarea data-autoresize rows="5" columns="5" placeholder="Tell something about the post.." name="textStatus" class="shareText align-middle" style="padding-top: 10px;"></textarea> </div> </div> </div> <div class="news-feed-text" style=" display: flex; flex-direction: column; align-items: baseline; margin:5px;box-shadow:0 0 2px darkgray;overflow: hidden;"> ' + nf_1 + ' ' + nf_2 + ' </div> <div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px; z-index: 1;"> <div class="status-privacy-wrap"> <div class="status-privacy " style="background-color: #f5f6f8;"> <div class="privacy-icon align-middle"> <img src="assets/images/profile/publicIcon.JPG" alt=""> </div> <div class="privacy-text">Public</div> <div class="privacy-downarrow-icon align-middle"> <img src="assets/images/watchmore.png" alt=""> </div> </div> <div class="status-privacy-option"> </div> </div> <div class="post-Share" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px;cursor:pointer;" data-postid="' + postid + '" data-userid="' + userid + '" data-profileid="' + profileid + '" >Share</div> </div> <div style=" position: absolute; bottom: 0; height: 43px; width: 100%; text-align: center; background: lightgrey;box-shadow: -1px -1px 5px grey;"></div> </div>');
+                    nf_1_right_dott_hide();
+                })
+
+                function nf_1_right_dott_hide() {
+                    $('.nf-1-right-dott').hide();
+                }
+                $(document).on('click', '.post-Share', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+                    var shareText = $(this).parents('.edit-post-submit').siblings('.edit-post-value').find('.shareText').val();
+
+                    $.post('http://localhost/facebook/core/ajax/share.php', {
+                        shareText: shareText,
+                        profileid: profileid,
+                        postid: postid,
+                        userid: userid
+                    }, function(data) {
+                        $('.top-box-show').empty();
+                        console.log(data);
+                    });
+
+
+                })
+
+
+                /////////.........share part end..............///////
                 //            function reactCountInc(postId, reactCount, reactNumText) {
                 //
                 //                reactNumText++;
@@ -944,7 +973,7 @@ $profileData = $loadFromUser->userData($profileId);
                     var userid = $(grandParent).data('userid');
                     //                var commentid = $(grandParent).data('commentid');
                     var spanClass = $(grandParent).find('.com-like-action-text').find('span');
-                    var com_nf_3 = $(grandParent).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+                    var com_nf_3 = $(grandParent).parent('.com-react').siblings('.com-text-option-wrap').find('.com-nf-3-wrap');
                     if ($(spanClass).attr('class') !== undefined) {
 
                         if ($(spanClass).hasClass(reactColor)) {
@@ -978,8 +1007,8 @@ $profileData = $loadFromUser->userData($profileId);
                     var commentID = $(thisParents).data('commentid');
                     var typeText = $(thisParents).find('.com-like-action-text span');
                     var typeR = $(typeText).text();
-                    var com_nf_3 = $(thisParents).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
-                    //                $(com_nf_3).hide();
+                    var com_nf_3 = $(thisParents).parents('.com-react').siblings('.com-text-option-wrap').find('.com-nf-3-wrap');
+                    //                    $(thisParents).hide();
 
                     //                reactNumText--;
                     var spanClass = $(thisParents).find('.com-like-action-text').find('span');
@@ -1031,8 +1060,87 @@ $profileData = $loadFromUser->userData($profileId);
                     });
                 }
 
+                //.................... comment edit delete start...............
+                $(document).on('click', '.com-dot', function() {
+                    $('.com-dot').removeAttr('id');
+                    $(this).attr('id', 'com-opt-click');
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var commentid = $(this).data('commentid');
+                    var postDetails = $(this).siblings('.com-opton-details-containter');
+                    $(postDetails).show().html('<div class="com-option-details" style="z-index:2;"><ul><li class="com-edit" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '">Edit</li><li class="com-delete" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '">Delete</li><li class="com-privacy" data-postid="' + postid + '" data-userid="' + userid + '">privacy</li></ul></div>');
+                })
+                $(document).on('click', 'li.com-edit', function() {
+
+                    var comTextContainer = $(this).parents('.com-dot-option-wrap').siblings('.com-pro-text').find('.com-text');
+                    var addId = $(comTextContainer).attr('id', 'editComPut');
+                    var getComText1 = $(comTextContainer).text();
+                    var postid = $(comTextContainer).data('postid');
+                    var userid = $(comTextContainer).data('userid');
+                    var commentid = $(comTextContainer).data('commentid');
+                    var profilepic = $(comTextContainer).data('profilepic');
+                    var getComText = getComText1.replace(/\s+/g, " ").trim()
+                    //                    var getPostImg = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+                    //                    var thiss = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+
+                    $('.top-box-show').html('<div class="top-box profile-dialog-show" style="top: 12.5%;left: 22.5%;width: 55%;"><div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; "><div class="edit-post-text">Edit Comment</div><div class="edit-post-close" style="padding: 5px; color: gray; cursor:pointer;">x</div></div><div class="edit-post-value" style="border-bottom: 1px solid lightgray;"><div class="status-med"><div class="status-prof"><div class="top-pic"><img src="' + profilepic + '" alt=""></div></div><div class="status-prof-textarea"><textarea data-autoresize rows="5" columns="5" placeholder="" name="textStatus" class="editCom align-middle" style="font-family:sens-serif; font-weight:400; padding:5px;">' + getComText + '</textarea></div></div></div><div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px;"><div class="status-privacy-wrap"><div class="status-privacy  "><div class="privacy-icon align-middle"><img src="assets/images/profile/publicIcon.JPG" alt=""></div><div class="privacy-text">Public</div><div class="privacy-downarrow-icon align-middle"><img src="assets/images/watchmore.png" alt=""></div></div><div class="status-privacy-option"></div></div><div class="edit-com-save" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px; cursor:pointer;" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '" >Save</div></div></div>');
+                });
+                $(document).on('click', '.edit-com-save', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var commentid = $(this).data('commentid');
+                    var editedText = $(this).parents('.edit-post-submit').siblings('.edit-post-value').find('.editCom');
+                    //                    var editedText = $(this).parents('.com-dot-option-wrap').siblings('.com-pro-text').find('.com-text');;
+                    var editedTextVal = $(editedText).val();
+                    $.post('http://localhost/facebook/core/ajax/editComment.php', {
+                        postid: postid,
+                        userid: userid,
+                        editedTextVal: editedTextVal,
+                        commentid: commentid
+
+                    }, function(data) {
+                        $('#editComPut').html(data).removeAttr('id');
+                        $('.top-box-show').empty();
+
+                    });
 
 
+
+
+                });
+                $(document).on('click', '.com-delete', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var commentid = $(this).data('commentid');
+                    var postContainer = $(this).parents('.new-comment');
+
+                    //                    if (confirm() {
+
+
+                    var r = confirm("Do you want to delete the post?");
+                    if (r == true) {
+                        $.post('http://localhost/facebook/core/ajax/editComment.php', {
+                            deletePost: postid,
+                            userid: userid,
+                            commentid: commentid
+                        }, function(data) {
+
+                            $(postContainer).empty();
+
+                        });
+                    } else {
+
+                    }
+
+                    //                        } else {
+                    //                            alert('not confirmed')
+                    //                        })
+
+
+
+                });
+
+                //.................... comment edit delete end...............
 
 
                 /////////////.........comment part end..............///////
@@ -1160,7 +1268,7 @@ $profileData = $loadFromUser->userData($profileId);
                     var userid = $(grandParent).data('userid');
                     //                var commentid = $(grandParent).data('commentid');
                     var spanClass = $(grandParent).find('.reply-like-action-text').find('span');
-                    var com_nf_3 = $(grandParent).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+                    var com_nf_3 = $(grandParent).parent('.com-react').siblings('.reply-text-option-wrap').find('.com-nf-3-wrap');
 
                     if ($(spanClass).attr('class') !== undefined) {
 
@@ -1200,7 +1308,7 @@ $profileData = $loadFromUser->userData($profileId);
                     var typeText = $(thisParents).find('.reply-like-action-text span');
                     var typeR = $(typeText).text();
                     var reactColor = '' + typeR + '-color';
-                    var com_nf_3 = $(thisParents).parent('.com-react').siblings('.com-pro-text').find('.com-nf-3-wrap');
+                    var com_nf_3 = $(thisParents).parent('.com-react').siblings('.reply-text-option-wrap').find('.com-nf-3-wrap');
                     //                $(com_nf_3).hide();
 
                     //                reactNumText--;
@@ -1268,6 +1376,93 @@ $profileData = $loadFromUser->userData($profileId);
 
 
 
+                //.................... reply edit delete start...............
+                $(document).on('click', '.reply-dot', function() {
+                    $('.com-dot').removeAttr('id');
+                    $(this).attr('id', 'reply-opt-click');
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var commentid = $(this).data('commentid');
+                    var replyid = $(this).data('replyid');
+                    var postDetails = $(this).siblings('.reply-option-details-containter');
+                    $(postDetails).show().html('<div class="reply-option-details" style="z-index:2;"><ul><li class="reply-edit" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '">Edit</li><li class="reply-delete" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '" data-replyid="' + replyid + '">Delete</li><li class="reply-privacy" data-postid="' + postid + '" data-userid="' + userid + '">privacy</li></ul></div>');
+                })
+                $(document).on('click', 'li.reply-edit', function() {
+
+                    var comTextContainer = $(this).parents('.reply-dot-option-wrap').siblings('.com-pro-text').find('.com-text');
+                    var addId = $(comTextContainer).attr('id', 'editReplyPut');
+                    var getComText1 = $(comTextContainer).text();
+                    var postid = $(comTextContainer).data('postid');
+                    var userid = $(comTextContainer).data('userid');
+                    var commentid = $(comTextContainer).data('commentid');
+                    var replyid = $(comTextContainer).data('replyid');
+                    var profilepic = $(comTextContainer).data('profilepic');
+                    var getComText = getComText1.replace(/\s+/g, " ").trim()
+                    //                    var getPostImg = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+                    //                    var thiss = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+
+                    $('.top-box-show').html('<div class="top-box profile-dialog-show" style="top: 12.5%;left: 22.5%;width: 55%;"><div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; "><div class="edit-post-text">Edit Comment</div><div class="edit-post-close" style="padding: 5px; color: gray; cursor:pointer;">x</div></div><div class="edit-post-value" style="border-bottom: 1px solid lightgray;"><div class="status-med"><div class="status-prof"><div class="top-pic"><img src="' + profilepic + '" alt=""></div></div><div class="status-prof-textarea"><textarea data-autoresize rows="5" columns="5" placeholder="" name="textStatus" class="editReply align-middle" style="font-family:sens-serif; font-weight:400; padding:5px;">' + getComText + '</textarea></div></div></div><div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px;"><div class="status-privacy-wrap"><div class="status-privacy  "><div class="privacy-icon align-middle"><img src="assets/images/profile/publicIcon.JPG" alt=""></div><div class="privacy-text">Public</div><div class="privacy-downarrow-icon align-middle"><img src="assets/images/watchmore.png" alt=""></div></div><div class="status-privacy-option"></div></div><div class="edit-reply-save" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px; cursor:pointer;" data-postid="' + postid + '" data-userid="' + userid + '" data-commentid="' + commentid + '" data-replyid="' + replyid + '">Save</div></div></div>');
+                });
+                $(document).on('click', '.edit-reply-save', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var commentid = $(this).data('commentid');
+                    var replyid = $(this).data('replyid');
+                    var editedText = $(this).parents('.edit-post-submit').siblings('.edit-post-value').find('.editReply');
+                    //                    var editedText = $(this).parents('.com-dot-option-wrap').siblings('.com-pro-text').find('.com-text');;
+                    var editedTextVal = $(editedText).val();
+                    $.post('http://localhost/facebook/core/ajax/editReply.php', {
+                        postid: postid,
+                        userid: userid,
+                        editedTextVal: editedTextVal,
+                        commentid: commentid,
+                        replyid: replyid
+
+                    }, function(data) {
+                        $('#editReplyPut').html(data).removeAttr('id');
+                        $('.top-box-show').empty();
+
+                    });
+
+
+
+
+                });
+                $(document).on('click', '.reply-delete', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var commentid = $(this).data('commentid');
+                    var replyid = $(this).data('replyid');
+                    var postContainer = $(this).parents('.new-reply');
+
+                    //                    if (confirm() {
+
+
+                    var r = confirm("Do you want to delete the post?");
+                    if (r == true) {
+                        $.post('http://localhost/facebook/core/ajax/editReply.php', {
+                            deletePost: postid,
+                            userid: userid,
+                            commentid: commentid,
+                            replyid: replyid
+                        }, function(data) {
+
+                            $(postContainer).empty();
+
+                        });
+                    } else {
+
+                    }
+
+                    //                        } else {
+                    //                            alert('not confirmed')
+                    //                        })
+
+
+
+                });
+
+                //.................... reply edit delete end...............
                 ////////////////........Reply Part End............/////////
 
 
@@ -1280,21 +1475,56 @@ $profileData = $loadFromUser->userData($profileId);
                     var postDetails = $(this).siblings('.post-option-details-container');
                     $(postDetails).show().html('<div class="post-option-details"><ul><li class="post-edit" data-postid="' + postid + '" data-userid="' + userid + '">Edit</li><li class="post-delete" data-postid="' + postid + '" data-userid="' + userid + '">Delete</li><li class="post-privacy" data-postid="' + postid + '" data-userid="' + userid + '">privacy</li></ul></div>');
                 })
+                $(document).on('click', '.shared-post-option', function() {
+                    $('.post-option').removeAttr('id');
+                    $(this).attr('id', 'opt-click');
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var postDetails = $(this).siblings('.shared-post-option-details-container');
+                    $(postDetails).show().html('<div class="shared-post-option-details"><ul><li class="shared-post-edit" data-postid="' + postid + '" data-userid="' + userid + '">Edit</li><li class="shared-post-delete" data-postid="' + postid + '" data-userid="' + userid + '">Delete</li><li class="post-privacy" data-postid="' + postid + '" data-userid="' + userid + '">privacy</li></ul></div>');
+                })
+
+
+
 
                 $(document).on('click', 'li.post-edit', function() {
 
                     var statusTextContainer = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-text');
                     var addId = $(statusTextContainer).attr('id', 'editPostPut');
-                    var getPostText = $(statusTextContainer).text();
+                    var getPostText1 = $(statusTextContainer).text();
                     var postid = $(statusTextContainer).data('postid');
                     var userid = $(statusTextContainer).data('userid');
                     var getPostImg = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
                     var thiss = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+                    var profilepic = $(statusTextContainer).data('profilepic');
+                    var getPostText = getPostText1.replace(/\s+/g, " ").trim();
 
-                    $('.top-box-show').html('<div class="top-box profile-dialog-show" style="top: 12.5%;left: 22.5%;width: 55%;"><div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; "><div class="edit-post-text">Edit Post</div><div class="edit-post-close" style="padding: 5px; color: gray; cursor:pointer;">x</div></div><div class="edit-post-value" style="border-bottom: 1px solid lightgray;"><div class="status-med"><div class="status-prof"><div class="top-pic"><img src="assets/images/me.jpg" alt=""></div></div><div class="status-prof-textarea"><textarea data-autoresize rows="5" columns="5" placeholder="" name="textStatus" class="editStatus align-middle" style="font-family:sens-serif; font-weight:400; padding:5px;">' + getPostText + '</textarea></div></div></div><div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px;"><div class="status-privacy-wrap"><div class="status-privacy  "><div class="privacy-icon align-middle"><img src="assets/images/profile/publicIcon.JPG" alt=""></div><div class="privacy-text">Public</div><div class="privacy-downarrow-icon align-middle"><img src="assets/images/watchmore.png" alt=""></div></div><div class="status-privacy-option"></div></div><div class="edit-post-save" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px; cursor:pointer;" data-postid="' + postid + '" data-userid="' + userid + '" data-tag="' + thiss + '">Save</div></div></div>');
+
+                    $('.top-box-show').html('<div class="top-box profile-dialog-show" style="top: 12.5%;left: 22.5%;width: 55%;"><div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; "><div class="edit-post-text">Edit Post</div><div class="edit-post-close" style="padding: 5px; color: gray; cursor:pointer;">x</div></div><div class="edit-post-value" style="border-bottom: 1px solid lightgray;"><div class="status-med"><div class="status-prof"><div class="top-pic"><img src="' + profilepic + '" alt=""></div></div><div class="status-prof-textarea"><textarea data-autoresize rows="5" columns="5" placeholder="" name="textStatus" class="editStatus align-middle" style="font-family:sens-serif; font-weight:400; padding:5px;">' + getPostText + '</textarea></div></div></div><div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px;"><div class="status-privacy-wrap"><div class="status-privacy  "><div class="privacy-icon align-middle"><img src="assets/images/profile/publicIcon.JPG" alt=""></div><div class="privacy-text">Public</div><div class="privacy-downarrow-icon align-middle"><img src="assets/images/watchmore.png" alt=""></div></div><div class="status-privacy-option"></div></div><div class="edit-post-save" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px; cursor:pointer;" data-postid="' + postid + '" data-userid="' + userid + '" data-tag="' + thiss + '">Save</div></div></div>');
                 });
 
+                $(document).on('click', 'li.shared-post-edit', function() {
+
+                    var statusTextContainer = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-text-span');
+                    var addId = $(statusTextContainer).attr('id', 'editPostPut');
+                    var getPostText1 = $(statusTextContainer).text();
+                    var postid = $(statusTextContainer).data('postid');
+                    var userid = $(statusTextContainer).data('userid');
+                    var getPostImg = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+                    var thiss = $(this).parents('.nf-1').siblings('.nf-2').find('.nf-2-img');
+                    var profilepic = $(statusTextContainer).data('profilepic');
+                    var getPostText = getPostText1.replace(/\s+/g, " ").trim();
+
+
+                    $('.top-box-show').html('<div class="top-box profile-dialog-show" style="top: 12.5%;left: 22.5%;width: 55%;"><div class="edit-post-header align-middle " style="justify-content: space-between; padding: 10px; height: 20px; background-color: lightgray;font-size: 14px; font-weight:600; "><div class="edit-post-text">Edit Post</div><div class="shared-edit-post-close" style="padding: 5px; color: gray; cursor:pointer;">x</div></div><div class="edit-post-value" style="border-bottom: 1px solid lightgray;"><div class="status-med"><div class="status-prof"><div class="top-pic"><img src="' + profilepic + '" alt=""></div></div><div class="status-prof-textarea"><textarea data-autoresize rows="5" columns="5" placeholder="" name="textStatus" class="sharedEditStatus align-middle" style="font-family:sens-serif; font-weight:400; padding:5px;">' + getPostText + '</textarea></div></div></div><div class="edit-post-submit" style="position: absolute;right:0; bottom: 0; display: flex; align-items: center; margin: 10px;"><div class="status-privacy-wrap"><div class="status-privacy  "><div class="privacy-icon align-middle"><img src="assets/images/profile/publicIcon.JPG" alt=""></div><div class="privacy-text">Public</div><div class="privacy-downarrow-icon align-middle"><img src="assets/images/watchmore.png" alt=""></div></div><div class="status-privacy-option"></div></div><div class="shared-edit-post-save" style="padding: 3px 15px; background-color: #4267bc;color: white; font-size: 14px; margin-left:5px; cursor:pointer;" data-postid="' + postid + '" data-userid="' + userid + '" data-tag="' + thiss + '">Save</div></div></div>');
+                });
+
+
                 $(document).on('click', '.edit-post-close', function() {
+                    //                    alert($('.editStatus').val());
+                    $('.top-box-show').empty();
+                });
+                $(document).on('click', '.shared-edit-post-close', function() {
                     //                    alert($('.editStatus').val());
                     $('.top-box-show').empty();
                 });
@@ -1321,7 +1551,29 @@ $profileData = $loadFromUser->userData($profileId);
 
 
                 });
-                $(document).on('click', '.post-delete', function() {
+                $(document).on('click', '.shared-edit-post-save', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var editedText = $(this).parents('.edit-post-submit').siblings('.edit-post-value').find('.sharedEditStatus');
+                    var editedTextVal = $(editedText).val();
+                    console.log(postid, userid, editedText, editedTextVal)
+
+                    $.post('http://localhost/facebook/core/ajax/sharedEditPost.php', {
+                        sharedpostid: postid,
+                        userid: userid,
+                        editedTextVal: editedTextVal
+
+                    }, function(data) {
+                        $('#editPostPut').html(data).removeAttr('id');
+                        $('.top-box-show').empty();
+
+                    });
+
+
+
+
+                });
+                $(document).on('click', '.shared-post-delete', function() {
                     var postid = $(this).data('postid');
                     var userid = $(this).data('userid');
                     var postContainer = $(this).parents('.profile-timeline');
@@ -1329,19 +1581,19 @@ $profileData = $loadFromUser->userData($profileId);
                     //                    if (confirm() {
 
 
-var r = confirm("Do you want to delete the post?");
-if (r == true) {
-     $.post('http://localhost/facebook/core/ajax/editPost.php', {
-                        deletePost: postid,
-                        userid: userid
-                    }, function(data) {
+                    var r = confirm("Do you want to delete the post?");
+                    if (r == true) {
+                        $.post('http://localhost/facebook/core/ajax/sharedEditPost.php', {
+                            deletePost: postid,
+                            userid: userid
+                        }, function(data) {
 
-                        $(postContainer).empty();
+                            $(postContainer).empty();
 
-                    });
-} else {
+                        });
+                    } else {
 
-}
+                    }
 
                     //                        } else {
                     //                            alert('not confirmed')
@@ -1408,6 +1660,9 @@ if (r == true) {
             $(document).mouseup(function(e) {
                 var container = new Array();
                 container.push($('.post-option-details-container'));
+                container.push($('.shared-post-option-details-container'));
+                container.push($('.com-opton-details-containter'));
+                container.push($('.reply-option-details-containter'));
                 //            container.push($('#item_2'));
 
                 $.each(container, function(key, value) {

@@ -327,7 +327,7 @@ input#main-search {
 .first-section {
     flex-basis: 15%;
     /*    border: 1px solid gray;*/
-    
+
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -337,10 +337,10 @@ input#main-search {
 .active-wrap {
     background-color: #f5f6f7;
     /*    width: 100%;*/
-    
+
     font-family: roboto, sans-serif;
     /*    width: 100%;*/
-    
+
     padding: 3px 85px 3px 5px;
     border-radius: 3px;
     box-shadow: 0.2px 0.2px 3px lightgray;
@@ -352,7 +352,7 @@ input#main-search {
     align-items: center;
     background-color: #f5f6f7;
     /*    width: 100%;*/
-    
+
     font-family: roboto, sans-serif;
     width: 95%;
     padding: 5px 0 5px 5px;
@@ -383,14 +383,14 @@ input#main-search {
     align-items: center;
     /*    background-color: #f5f6f7;*/
     /*    width: 100%;*/
-    
+
     font-family: roboto, sans-serif;
     width: 100%;
     padding: 5px 0 5px 5px;
     border-radius: 3px;
     /*    box-shadow: 0.2px 0.2px 3px lightgray;*/
     /*    font-weight: 600;*/
-    
+
     font-size: 12px;
     cursor: pointer;
     color: black;
@@ -421,7 +421,7 @@ input#main-search {
 .second-section {
     flex-basis: 43%;
     /*    border: 1px solid gray;*/
-    
+
     height: 100vh;
     padding: 0 12px 12px 12px;
     /*    width: 500px;*/
@@ -453,13 +453,13 @@ input#main-search {
 }
 .status-prof {
     /*    width: 100%;*/
-    
+
     margin: 5px;
 }
 #status {
     height: 71px;
     /*    min-width: 200%;*/
-    
+
     border: none;
     font-size: 20px;
     display: flex;
@@ -621,7 +621,7 @@ input#main-search {
     height: 35px;
     width: 35px;
     /*                            padding: 0 5px;*/
-    
+
     cursor: pointer;
     position: absolute;
 }
@@ -629,7 +629,7 @@ input#main-search {
     height: 42px;
     width: 42px;
     /*                            padding: 0 5px;*/
-    
+
     transform: rotate(30deg);
     transition: 0.2s;
     cursor: pointer;
@@ -639,7 +639,7 @@ input#main-search {
     height: 35px;
     width: 35px;
     /*                            padding: 0 5px;*/
-    
+
     cursor: pointer;
     position: absolute;
 }
@@ -647,7 +647,7 @@ input#main-search {
     height: 42px;
     width: 42px;
     /*                            padding: 0 5px;*/
-    
+
     transform: rotate(30deg);
     transition: 0.2s;
     cursor: pointer;
@@ -731,12 +731,28 @@ li.new-comment {
 .com-nf-3.align-middle {
     position: absolute;
     right: 0;
-    margin-right: -27px;
-    margin-top: 7px;
+    margin-right: -8px;
+    margin-top: 10px;
     background-color: white;
     padding: 2px 3px;
     box-shadow: 0px 0px 3px grey;
     border-radius: 10px;
+    bottom: -22px;
+}
+.com-dot-option-wrap {
+    position: relative;
+}
+.com-dot-opton {
+    position: absolute;
+}
+.com-option-details {
+    position: absolute;
+    font-size: 12px;
+    color: #0000009e;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px grey;
 }
 
 /*...Reply Start...*/
@@ -748,6 +764,16 @@ li.new-comment {
 }
 .com-text-react-wrap {
     width: fit-content;
+}
+.com-option-details ul li:hover {
+    background-color: lightgray;
+}
+.com-option-details ul li {
+    margin-top: 5px;
+    font-size: 12px;
+    padding: 3px 5px;
+    border-radius: 3px;
+    cursor: pointer;
 }
 .reply-wrap {
     width: 100%;
@@ -781,6 +807,34 @@ li.new-comment {
 .reply-main-icon-css {
     cursor: pointer;
 }
+.reply-dot-option-wrap {
+    position: relative;
+}
+.reply-dot-opton {
+    position: absolute;
+}
+.reply-option-details {
+    position: absolute;
+    font-size: 12px;
+    color: #0000009e;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px grey;
+}
+.reply-option-details ul li:hover {
+    background-color: lightgray;
+}
+.reply-option-details ul li {
+    margin-top: 5px;
+    font-size: 12px;
+    padding: 3px 5px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.edit-post-close {
+    cursor: pointer;
+}
 
 /*...Reply end...*/
 
@@ -792,13 +846,13 @@ li.new-comment {
 .third-section {
     flex-basis: 21%;
     /*        border: 1px solid gray;*/
-    
+
     height: 100vh;
 }
 .story-wrap {
     /*        height: 327px;*/
     /*        width: 308px;*/
-    
+
     background-color: white;
     border-radius: 3px;
     box-shadow: 0px 0px 1px gray;
@@ -817,11 +871,11 @@ li.new-comment {
 .add-circle {
     font-size: 30px;
     /*        padding: 10px;*/
-    
+
     width: 50px;
     height: 50px;
     /*        padding: 20px;*/
-    
+
     background-color: #f5f6f7;
     border: 1px solid lightgray;
     border-radius: 50%;
@@ -872,7 +926,7 @@ li.new-comment {
     flex-direction: column;
     justify-content: flex-start;
     /*        align-items: center;*/
-    
+
     margin-left: 10px;
 }
 .more-story {
@@ -972,10 +1026,10 @@ li.new-comment {
 .fourth-section {
     flex-basis: 18%;
     /*        border: 1px solid gray;*/
-    
+
     height: 100vh;
     /*        background-color: white;*/
-    
+
     border-radius: 3px;
     box-shadow: 0px 0px 1px gray;
     padding: 10px;
@@ -1051,10 +1105,10 @@ li.new-comment {
     position: absolute;
     padding: 10px 15px;
     /*        height: 80px;*/
-    
+
     box-shadow: 0px 0px 20px black;
     /*        width: 80px;*/
-    
+
     background-color: white;
     -webkit-clip-path: polygon(0 12%, 19% 12%, 25% 0, 30% 12%, 100% 13%, 100% 100%, 0 100%);
     clip-path: polygon(0 12%, 19% 12%, 25% 0, 30% 12%, 100% 13%, 100% 100%, 0 100%);
@@ -1073,10 +1127,10 @@ li.new-comment {
 .file-upload__label {
     display: block;
     /*            padding: 1em 2em;*/
-    
+
     color: #000;
     /*            background: #222;*/
-    
+
     border-radius: .4em;
     transition: background .3s;
     &:hover {
@@ -1114,7 +1168,7 @@ li.new-comment {
         opacity: 1;
         transition: 0.2s;
     }
-    
+
 */
 .select-cover-photo {
     margin-bottom: 10px;
@@ -1195,7 +1249,7 @@ li.new-comment {
     display: flex;
     justify-content: flex-end;
     /*        padding-left: -20px;*/
-    
+
     align-items: center;
 }
 .profile-name {
@@ -1206,7 +1260,7 @@ li.new-comment {
     color: white;
     /*        word-spacing: 2px;*/
     /*        line-height: 2.5;*/
-    
+
     text-shadow: 0px 0px 1px black;
 }
 .profile-activity-button {}
@@ -1222,7 +1276,7 @@ li.new-comment {
 .dot-wrap:hover .timeline-settings {
     opacity: 1;
     /*        padding: 5px 10px;*/
-    
+
     background-color: white;
     font-size: 10px;
     -webkit-clip-path: polygon(0 15%, 17% 14%, 25% 0, 34% 14%, 100% 15%, 100% 100%, 0 100%);
@@ -1527,6 +1581,27 @@ li.new-comment {
 .post-option-details ul {
     margin: 5px;
 }
+.shared-post-option-details {
+    position: absolute;
+    font-size: 12px;
+    color: #0000009e;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px grey;
+}
+.shared-post-option-details ul li {
+    margin-top: 5px;
+    font-size: 12px;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+.shared-post-option-details ul li:hover {
+    background-color: lightgray;
+}
+.shared-post-option-details ul {
+    margin: 5px;
+}
 
 /*
     .cover-right-wrap {
@@ -1545,10 +1620,10 @@ li.new-comment {
     justify-content: flex-start;
     align-items: center;
     /*    background-color: black;*/
-    
+
     padding: 5px;
     /*    border: 1px solid white;*/
-    
+
     margin-bottom: 32px;
     /*    cursor: pointer;*/
 }

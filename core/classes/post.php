@@ -9,8 +9,7 @@ class Post extends User {
 
  $userdata = $this->userData($user_id);
 
-		$stmt = $this->pdo->prepare("SELECT users.*, post.*, profile.* from users, post, profile WHERE users.user_id = :user_id AND post.postBy = :user_id AND profile.userId =:user_id  ORDER BY post.postedOn DESC LIMIT :num");
-//        $stmt = $this->pdo->prepare("SELECT * FROM posts LEFT JOIN users ON postBy = user_id WHERE postBy = :user_id AND repostID ='0' OR postBy = user_id AND repostBy != :user_id AND `postBy` IN(SELECT `receiver` FROM `follow` WHERE `sender` = :user_id) ORDER BY `postID` DESC LIMIT :num");
+		$stmt = $this->pdo->prepare("SELECT * FROM users LEFT JOIN profile ON users.user_id = profile.userId LEFT JOIN post ON post.userId = users.user_id WHERE post.userId = :user_id ORDER BY post.postedOn DESC LIMIT :num");
 		$stmt->bindParam(":user_id", $profileId, PDO::PARAM_INT);
 		$stmt->bindParam(":num", $num, PDO::PARAM_INT);
 		$stmt->execute();
@@ -19,14 +18,19 @@ class Post extends User {
 			$main_react = $this->main_react($user_id, $post->post_id);
 			$react_max_show = $this->react_max_show($post->post_id);
 			$main_react_count = $this->main_react_count($post->post_id);
-
-//			$repost = $this->checkRepost($post->postID, $user_id);
-//			$user = $this->userData($post->repostBy);
           $commentDetails=$this->CommentFetch($post->post_id);
+            if(empty($post->shareId)){
+
+            }else{
+                $shareDetails=$this->shareFetch($post->shareId,$post->postBy);
+
+            }
+
 			?>
     <div class="profile-timeline">
         <div class="news-feed-comp">
             <div class="news-feed-text">
+                <!--               .... Post user photo and name Start.....-->
                 <div class="nf-1">
                     <div class="nf-1-left">
                         <div class="nf-pro-pic">
@@ -49,18 +53,128 @@ class Post extends User {
                     </div>
                     <div class="nf-1-right">
                         <div class="nf-1-right-dott">
-                            <div class="post-option" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">...</div>
 
-                            <div class="post-option-details-container"></div>
+                            <?php
+            if(empty($post->shareId)){
 
+            if($user_id == $profileId){ ?>
+                                <div class="post-option" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">...</div>
+
+                                <div class="post-option-details-container"></div>
+                                <?php }else{}
+
+                            }else{
+             if($user_id == $profileId){ ?>
+                                <div class="shared-post-option" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">...</div>
+
+                                <div class="shared-post-option-details-container"></div>
+                                <?php }else{}
+
+
+
+
+            }
+
+                            ?>
 
                         </div>
 
                     </div>
                 </div>
+                <!--               .... Post user photo and name End.....-->
+
+
+                <!--               ....Post Text Start.....-->
+
                 <div class="nf-2">
-                    <div class="nf-2-text" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">
-                        <?php echo $post->post; ?>
+                    <div class="nf-2-text" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?> " data-profilepic="<?php echo $post->profilePic; ?>">
+                        <?php
+
+if(empty($post->shareId)){echo $post->post;}else{
+   if(empty($shareDetails)){echo 'share has not found';}else{
+       echo '<span class="nf-2-text-span" data-postid="'.$post->post_id.'" data-userid="'.$user_id.' " data-profilepic="'.$post->profilePic.'" >'.$post->shareText.'</span>' ;
+foreach($shareDetails as $share){
+   ?>
+
+                            <!--               .... Share Post user photo and name Start.....-->
+
+                            <div class="share-container" style="padding:5px;box-shadow:0 0 3px gray;margin-top:10px;display:flex; flex-direction:column;display: flex;flex-direction: column;align-items: flex-start;cursor:pointer;">
+
+                                <div class="nf-1">
+                                    <div class="nf-1-left">
+                                        <div class="nf-pro-pic">
+                                            <a href="<?php echo BASE_URL.$share->userLink; ?>">
+                                <img src="<?php echo BASE_URL.$share->profilePic; ?>" class="pro-pic" alt="">
+                            </a>
+                                        </div>
+                                        <div class="nf-pro-name-time">
+                                            <div class="nf-pro-name">
+                                                <a href="<?php echo BASE_URL.$share->userLink; ?>" class="nf-pro-name"><?php echo ''.$share->firstName.' '.$share->lastName.''; ?></a>
+
+                                            </div>
+                                            <div class="nf-pro-time-privacy">
+                                                <div class="nf-pro-time">
+                                                    <?php echo $this->timeAgo($share->postedOn); ?>
+                                                </div>
+                                                <div class="nf-pro-privacy"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nf-1-right">
+
+
+                                    </div>
+                                </div>
+                                <!--               ....Share Post user photo and name End.....-->
+
+
+                                <!--               ....Share Post Text Start.....-->
+
+                                <div class="nf-2">
+                                    <div class="nf-2-text" data-postid="<?php echo $share->post_id; ?>" data-userid="<?php echo $user_id; ?> " data-profilepic="<?php echo $share->profilePic; ?>">
+                                        <?php echo $share->post; ?>
+
+
+
+
+                                    </div>
+                                    <div class="nf-2-img" data-postid="<?php echo $share->post_id; ?>" data-userid="<?php echo $user_id; ?>">
+                                        <?php $shareImgJson = json_decode($share->postImage);
+                            $shareCount = 0;
+                                for($i = 0; $i < count($shareImgJson); $i++) {
+                                    echo '<div class="post-img-box" data-postImgID="'.$share->id.'" style="max-height: 400px;
+    overflow: hidden;"><img src="'.BASE_URL.$shareImgJson[''.$shareCount++.'']->imageName.'" alt="" style="width: 100%;"></div>';
+                                }
+
+
+
+                        ?>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!--               ....Share  Post Text End.....-->
+
+
+
+
+
+
+
+                            <?php
+}
+}
+}
+
+
+
+                        ?>
+
+
+
+
                     </div>
                     <div class="nf-2-img" data-postid="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>">
                         <?php $imgJson = json_decode($post->postImage);
@@ -76,6 +190,8 @@ class Post extends User {
                     </div>
 
                 </div>
+                <!--               .... Post Text End.....-->
+
                 <div class="nf-3">
                     <div class="nf-3-react-icon">
                         <div class="react-inst-img align-middle" style="">
@@ -139,7 +255,7 @@ class Post extends User {
                         </div>
                         <div class="comment-action-text">Comment</div>
                     </div>
-                    <div class="share-action ra">
+                    <div class="share-action ra" data-postId="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>" data-profileid="<?php echo $profileId; ?>" data-profilepic="<?php echo $userdata->profilePic; ?>">
                         <div class="share-action-icon"><img src="assets/images/shareAction.JPG" alt=""></div>
                         <div class="share-action-text">Share</div>
                     </div>
@@ -164,37 +280,52 @@ class Post extends User {
                                     </div>
                                     <div class="com-pro-wrap">
                                         <div class="com-text-react-wrap">
-                                            <div class="com-pro-text align-middle">
-                                                <a href="#"><span class="nf-pro-name"><?php echo ''.$comment->firstName.' '.$comment->lastName.''; ?></span></a>
-                                                <div class="com-react-placeholder-wrap align-middle">
-                                                    <div class="com-text" style="margin-left:5px;">
-                                                        <?php echo $comment->comment; ?>
-                                                    </div>
-                                                    <div class="com-nf-3-wrap">
-                                                        <?php
+                                            <div class="com-text-option-wrap align-middle">
+                                                <div class="com-pro-text align-middle">
+
+
+                                                    <div class="com-react-placeholder-wrap align-middle">
+
+                                                        <div>
+                                                            <span class="nf-pro-name"><a href="" class="nf-pro-name"><?php echo ''.$comment->firstName.' '.$comment->lastName.''; ?></a></span>
+                                                            <span class="com-text" style="margin-left:5px;" data-postid="<?php echo $comment->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $comment->commentID; ?>" data-profilepic="<?php  echo $userdata->profilePic; ?>"><?php echo $comment->comment; ?></span>
+                                                        </div>
+                                                        <div class="com-nf-3-wrap">
+                                                            <?php
 
                                                     if($main_react_count->maxreact == '0'){}else{
 
                                                             ?>
-                                                            <div class="com-nf-3 align-middle">
-                                                                <div class="nf-3-react-icon">
-                                                                    <div class="react-inst-img align-middle" style="">
-                                                                        <?php
+                                                                <div class="com-nf-3 align-middle">
+                                                                    <div class="nf-3-react-icon">
+                                                                        <div class="react-inst-img align-middle" style="">
+                                                                            <?php
                                                             foreach($com_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="nf-3-react-username">
+                                                                        <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
                                                                     </div>
                                                                 </div>
-                                                                <div class="nf-3-react-username">
-                                                                    <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
-                                                                </div>
-                                                            </div>
-                                                            <?php
+                                                                <?php
     }
                     ?>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <?php if($user_id == $comment->commentBy){ ?>
+
+                                                <div class="com-dot-option-wrap">
+                                                    <div class="com-dot" style="color:gray; margin-left:5px; cursor:pointer;" data-postid="<?php echo $comment->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $comment->commentID; ?>">...</div>
+                                                    <div class="com-opton-details-containter">
+
                                                     </div>
 
                                                 </div>
+                                                <?php } else{} ?>
                                             </div>
                                             <div class="com-react">
 
@@ -240,34 +371,43 @@ class Post extends User {
                                                                 </div>
                                                                 <div class="com-pro-wrap">
                                                                     <div class="com-text-react-wrap">
-                                                                        <div class="com-pro-text align-middle">
-                                                                            <a href="#"><span class="nf-pro-name"><?php echo ''.$reply->firstName.' '.$reply->lastName.''; ?></span></a>
-                                                                            <div class="com-react-placeholder-wrap align-middle">
-                                                                                <div class="com-text" style="margin-left:5px;">
-                                                                                    <?php echo $reply->comment; ?>
-                                                                                </div>
-                                                                                <div class="com-nf-3-wrap">
-                                                                                    <?php
+                                                                        <div class="reply-text-option-wrap align-middle">
+                                                                            <div class="com-pro-text align-middle">
+                                                                                <a href="#"><span class="nf-pro-name"><?php echo ''.$reply->firstName.' '.$reply->lastName.''; ?></span></a>
+                                                                                <div class="com-react-placeholder-wrap align-middle">
+                                                                                    <div class="com-text" data-commentid="<?php  echo $comment->commentID; ?>" data-postid="<?php  echo $comment->commentOn; ?>" data-profilepic="<?php  echo $userdata->profilePic; ?>" data-replyid="<?php  echo $reply->commentID; ?>" data-userid="<?php echo $user_id; ?>" style="margin-left:5px;">
+                                                                                        <?php echo $reply->comment; ?>
+                                                                                    </div>
+                                                                                    <div class="com-nf-3-wrap">
+                                                                                        <?php
                                 if($reply_react_count->maxreact == '0'){}else{
 
                                                             ?>
-                                                                                        <div class="com-nf-3 align-middle">
-                                                                                            <div class="nf-3-react-icon">
-                                                                                                <div class="react-inst-img align-middle" style="">
-                                                                                                    <?php
+                                                                                            <div class="com-nf-3 align-middle">
+                                                                                                <div class="nf-3-react-icon">
+                                                                                                    <div class="react-inst-img align-middle" style="">
+                                                                                                        <?php
                                                             foreach($reply_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?> </div>
+                                                                                                </div>
+                                                                                                <div class="nf-3-react-username">
+                                                                                                    <?php if($reply_react_count->maxreact == '0'){}else{echo $reply_react_count->maxreact;} ?>
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <div class="nf-3-react-username">
-                                                                                                <?php if($reply_react_count->maxreact == '0'){}else{echo $reply_react_count->maxreact;} ?>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <?php
+                                                                                            <?php
     }
                     ?>
+                                                                                    </div>
+
                                                                                 </div>
 
+                                                                            </div>
+
+                                                                            <div class="reply-dot-option-wrap">
+                                                                                <div class="reply-dot" style="color:gray; margin-left:5px; cursor:pointer;" data-postid="<?php echo $comment->commentOn; ?>" data-userid="<?php echo $user_id; ?>" data-commentid="<?php  echo $comment->commentID; ?>" data-replyid="<?php  echo $reply->commentID; ?>">...</div>
+                                                                                <div class="reply-option-details-containter">
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="com-react">
@@ -310,48 +450,7 @@ class Post extends User {
 
                                             </div>
                                         </div>
-                                        <!--
-                                        <div class="reply-wrap">
-                                            <div class="reply-text-wrap">
-                                                <ul class="old-replay">
-                                                    <li class="new-reply">This is reply text </li>
-                                                </ul>
-                                            </div>
-                                            <div class="replyInput">
-                                                <div class="comment-write">
-                                                    <div class="com-pro-pic" style="margin-top: 4px;">
-                                                        <a href="#">
-                                                            <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
-                                                        </a>
-                                                    </div>
-                                                    <div class="com-input" style="">
-                                                        <div class="comment-input" style="flex-basis:75%;">
-                                                            <input type="text" name="" id="" class="comment-input-style comment-submit" style="" data-postid="<?php echo $post->post_id; ?>" data-userid="
-                                                    <?php echo $user_id; ?>" placeholder="Write a comment...">
-                                                </div>
-                                                <div class="comment-input-option ">
-                                                    <div class="imoji-action align-middle">
-                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/emojiAction.JPG'; ?>" alt="">
-                                                    </div>
-                                                    <div class="cam-action align-middle">
-                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/commentCamera.JPG'; ?>" alt="">
-                                                    </div>
-                                                    <div class="gif-action align-middle">
-                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/commentGif.JPG'; ?>" alt="">
-                                                    </div>
-                                                    <div class="sticker-action align-middle">
-                                                        <img src="<?php echo ''.BASE_URL.'/assets/images/commentSticker.JPG'; ?>" alt="">
-                                                    </div>
-                                                </div>
 
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
-                                </div>
-                                -->
                                     </div>
 
                                 </div>
@@ -496,6 +595,13 @@ class Post extends User {
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+    public function shareFetch($shareid,$profileId){
+        $stmt = $this->pdo->prepare("SELECT users.*, post.*, profile.* from users, post, profile WHERE users.user_id = :user_id AND post.post_id = :postid AND profile.userId = :user_id");
+			$stmt->bindParam(":postid", $shareid, PDO::PARAM_INT);
+			$stmt->bindParam(":user_id", $profileId, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 
     public function replyFetch($postid,$commentID){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentOn = :postid AND comments.commentReplyID = :commentid LIMIT 10");
@@ -512,6 +618,35 @@ public function postUpd($user_id, $post_id, $editText){
 			$stmt->execute();
 
 		}
+    public function sharedPostUpd($user_id, $post_id, $editText){
+			$stmt = $this->pdo->prepare("UPDATE `post` SET `shareText` = :editText WHERE `post_id` = :post_id AND `userId` = :user_id ");
+			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+    	   $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+    	   $stmt->bindParam(":editText", $editText, PDO::PARAM_INT);
+			$stmt->execute();
+
+		}
+    public function commentUpd($userid, $postid, $editedTextVal,$commentid){
+			$stmt = $this->pdo->prepare("UPDATE `comments` SET `comment` = :editText WHERE `commentID` = :comment_id AND `commentBy` = :user_id AND `commentOn` = :post_id ");
+			$stmt->bindParam(":post_id", $postid, PDO::PARAM_INT);
+    	   $stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+    	   $stmt->bindParam(":editText", $editedTextVal, PDO::PARAM_INT);
+    	   $stmt->bindParam(":comment_id", $commentid, PDO::PARAM_INT);
+			$stmt->execute();
+
+		}
+
+    public function replyUpd($userid, $postid, $editedTextVal,$commentid,$replyid){
+			$stmt = $this->pdo->prepare("UPDATE `comments` SET `comment` = :editText WHERE `commentBy` = :user_id AND `commentOn` = :post_id AND `commentID` = :replyid ");
+			$stmt->bindParam(":post_id", $postid, PDO::PARAM_INT);
+    	   $stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+    	   $stmt->bindParam(":editText", $editedTextVal, PDO::PARAM_INT);
+    	   $stmt->bindParam(":replyid", $replyid, PDO::PARAM_INT);
+			$stmt->execute();
+
+		}
+
+
 
 
 

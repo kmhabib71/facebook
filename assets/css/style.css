@@ -1263,7 +1263,6 @@ li.new-comment {
 
     text-shadow: 0px 0px 1px black;
 }
-.profile-activity-button {}
 .timeline-settings {
     opacity: 0;
     padding: 5px 10px;
@@ -1300,24 +1299,115 @@ li.new-comment {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #f0f4f6;
     height: 26px;
     font-size: 12px;
     color: gray;
     font-weight: 600;
     padding: 0 10px;
     margin-right: 10px;
+    cursor: pointer;
+}
+.profile-add-friend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.profile-friend-sent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.profile-friend-confirm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.profile-friend-already {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 .profile-activity-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #f0f4f6;
     height: 26px;
     font-size: 12px;
     color: gray;
     font-weight: 600;
     padding: 0 10px;
+    cursor: pointer;
+}
+.profile-message-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.profile-follow-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.profile-unfollow-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f6;
+    height: 26px;
+    font-size: 12px;
+    color: #484848;
+    font-weight: 600;
+    padding: 0 10px;
+    cursor: pointer;
+    border: 1px solid gray;
 }
 .profile-activity-button-dot {
     display: flex;
@@ -1331,7 +1421,7 @@ li.new-comment {
     padding: 0 10px;
     border-left: 1px solid gray;
     width: 20px;
-    margin-top: 26px;
+    /*    margin-top: 26px;*/
 }
 .align-middle {
     display: flex;
@@ -1626,4 +1716,49 @@ li.new-comment {
 
     margin-bottom: 32px;
     /*    cursor: pointer;*/
+}
+.con-req {}
+.request-cancel {
+    position: absolute;
+    margin-top: 3px;
+    background-color: white;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    width: 99%;
+    text-align: center;
+    margin-left: -11px;
+    display: none;
+}
+.request-cancel:hover {
+    position: absolute;
+    margin-top: 3px;
+    background-color: lightgray;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    width: 99%;
+    text-align: center;
+    margin-left: -11px;
+    display: none;
+}
+.request-unfriend {
+    position: absolute;
+    margin-top: 3px;
+    background-color: white;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    width: 99%;
+    text-align: center;
+    margin-left: -11px;
+    display: none;
+}
+.request-unfriend:hover {
+    position: absolute;
+    margin-top: 3px;
+    background-color: lightgray;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    width: 99%;
+    text-align: center;
+    margin-left: -11px;
+    display: none;
 }

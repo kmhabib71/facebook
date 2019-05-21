@@ -21,6 +21,11 @@ $username = $loadFromUser->checkInput($_GET['username']);
 $profileId = $loadFromUser->userIdByUsername($username);
 
 $profileData = $loadFromUser->userData($profileId);
+$userData = $loadFromUser->userData($userid);
+
+$requestCheck = $loadFromPost->requestCheck($userid,$profileId);
+$requestConf = $loadFromPost->requestConf($profileId,$userid);
+$followCheck = $loadFromPost->followCheck($profileId,$userid);
 
 
 
@@ -59,10 +64,10 @@ $profileData = $loadFromUser->userData($profileId);
                 </div>
                 <div class="top_right_part">
                     <div class="top-pic-name-wrap">
-                        <a href="profile.php?username=<?php echo $profileData->userLink; ?>" class="top-pic-name">
-                            <div class="top-pic"><img src="<?php echo $profileData->profilePic; ?>" alt=""></div>
+                        <a href="profile.php?username=<?php echo $userData->userLink; ?>" class="top-pic-name">
+                            <div class="top-pic"><img src="<?php echo $userData->profilePic; ?>" alt=""></div>
                             <div class="top-name top-css">
-                                <?php echo $profileData->first_name; ?> </div>
+                                <?php echo $userData->first_name; ?> </div>
                         </a>
                     </div>
                     <a href="home.php">
@@ -113,10 +118,6 @@ $profileData = $loadFromUser->userData($profileId);
 
                             <?php  }else{ ?>
                             <div class="dont-add-cover-photo">
-                                <!--
-<img src="assets/images/profile/uploadCoverPhoto.JPG" alt="">
-<div class="add-cover-text">Add a cover photo</div>-->
-
                             </div>
 
 
@@ -151,21 +152,124 @@ $profileData = $loadFromUser->userData($profileId);
                                     <?php echo ''.$profileData->first_name.' '.$profileData->last_name.'';  ?>
                                 </div>
                             </div>
+                            <!-- ///////// ...........Request, Follow, Messenger Start...........///////////-->
                             <div class="profile-action">
-                                <div class="profile-edit-button">
-                                    <img src="assets/images/profile/editProfile.JPG" alt="">
-                                    <div class="edit-profile-button-text">Edit Profile</div>
-                                </div>
-                                <div class="profile-activity-button">
-                                    <img src="assets/images/profile/activityLog.JPG" alt="">
-                                    <div class="profile-activity-button-text">Edit Profile</div>
-                                </div>
-                                <div class="dot-wrap">
-                                    <div class="profile-activity-button-dot"> ... </div>
-                                    <div class="timeline-settings ">Timeline Settings</div>
-                                </div>
+                                <?php
+                                if($userid == $profileId){
+                                ?>
+                                    <div class="profile-edit-button">
+                                        <img src="assets/images/profile/editProfile.JPG" alt="">
+                                        <div class="edit-profile-button-text">Edit Profile</div>
+                                    </div>
+                                    <div class="profile-activity-button">
+                                        <img src="assets/images/profile/activityLog.JPG" alt="">
+                                        <div class="profile-activity-button-text">Edit Profile</div>
+                                    </div>
+                                    <div class="dot-wrap">
+                                        <div class="profile-activity-button-dot"> ... </div>
+                                    </div>
+                                    <?php }else{
+                                    if(empty($requestCheck)){
 
+                                            if(empty($requestConf)){
+                                                ?>
+                                    <div class="profile-add-friend" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+                                        <img src="assets/images/friendRequestGray.JPG" alt="">
+                                        <div class="edit-profile-button-text">Add Friend</div>
+                                    </div>
+                                    <?php
+                                            }elseif($requestConf->reqStatus == '0'){
+                                    ?>
+                                        <div class="profile-friend-confirm" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+
+                                            <div class="edit-profile-confirm-button" style="position:relative;">
+                                                <div class="con-req accept-req align-middle" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>"><img src="assets/images/friendRequestGray.JPG" alt="">Confirm Request</div>
+                                                <div class="request-cancel" style="" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">Cancel Request</div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <?php
+
+                                            }elseif($requestConf->reqStatus == '1'){
+                                                ?>
+                                            <div class="profile-friend-confirm" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+
+                                                <div class="edit-profile-confirm-button" style="position:relative;">
+                                                    <div class="con-req align-middle"><img src="assets/images/rightsignGray.JPG" alt="">Friend</div>
+                                                    <div class="request-unfriend" style="" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">Unfriend</div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <?php
+                                            }else{}
+                                        ?>
+
+                                                <?php
+                                    }elseif ($requestCheck->reqStatus == '0'){
+                                        ?>
+                                                    <div class="profile-friend-sent" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+                                                        <img src="assets/images/friendRequestGray.JPG" alt="">
+                                                        <div class="edit-profile-button-text">Friend Request Sent</div>
+                                                    </div>
+
+
+                                                    <?php
+                                    }elseif($requestCheck->reqStatus == '1'){
+                                                        ?>
+                                                        <div class="profile-friend-confirm" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+
+                                                            <div class="edit-profile-confirm-button" style="position:relative;">
+                                                                <div class="con-req align-middle"><img src="assets/images/rightsignGray.JPG" alt="">Friend</div>
+                                                                <div class="request-unfriend" style="" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">Unfriend</div>
+
+                                                            </div>
+
+                                                        </div>
+                                                        <?php
+                                    }else{echo 'Not found';}
+
+                                    ?>
+                                                           <?php
+                                    if(empty($followCheck)){
+                                       ?>
+                                       <div class="profile-follow-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>" style="border-right: 1px solid gray;">
+                                                                <img src="assets/images/followGray.JPG" alt="">
+                                                                <div class="profile-activity-button-text">Follow</div>
+                                                            </div>
+                                        <?php
+
+
+                                    }else{
+                                    ?>
+                                    <div class="profile-unfollow-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>" style="border-right: 1px solid gray;">
+                                                                <img src="assets/images/rightsignGray.JPG" alt="">
+                                                                <div class="profile-activity-button-text">Following</div>
+                                                            </div>
+
+                                    <?php
+                                    }
+
+                                    ?>
+
+
+
+
+
+                                                            <div class="profile-message-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+                                                                <img src="assets/images/messangerGray.png" alt="">
+                                                                <div class="profile-activity-button-text">Message</div>
+                                                            </div>
+
+                                                            <?php
+
+                                } ?>
                             </div>
+                            <!-- ///////// ...........Request, Follow, Messenger End...........///////////-->
+
                         </div>
 
                     </div>
@@ -221,7 +325,7 @@ $profileData = $loadFromUser->userData($profileId);
                             <div class="bio-add-photo"></div>
                             <div class="bio-find-friend"></div>
                         </div>
-                        <div class="status-timeline-wrap">
+                        <div class="status-timeline-wrap" style="margin-top: -10px;">
                             <?php if($profileId == $userid){ ?>
                             <div class="profile-status-write">
                                 <div class="status-wrap">
@@ -317,56 +421,12 @@ $profileData = $loadFromUser->userData($profileId);
                 </div>
                 <div class="cover-right-wrap">
                     <div class="profile-active-user">
-                        <div class="active-user-pro">
-                            <div class="active-user-photo">
-                                <img src="assets/images/me.jpg" class="active-user-pro-pic" alt="">
-                                <div class="active-user-name">
-                                    Jarib Farhan
-                                </div>
-                            </div>
+                        <?php
+                        $loadFromPost->liveUsers($userid);
 
-                            <div class="active-user-circle"></div>
-                        </div>
-                        <div class="active-user-pro">
-                            <div class="active-user-photo">
-                                <img src="assets/images/me2.jpg" class="active-user-pro-pic" alt="">
-                                <div class="active-user-name">
-                                    Rashid Shareef
-                                </div>
-                            </div>
 
-                            <div class="active-user-circle"></div>
-                        </div>
-                        <div class="active-user-pro">
-                            <div class="active-user-photo">
-                                <img src="assets/images/me3.png" class="active-user-pro-pic" alt="">
-                                <div class="active-user-name">
-                                    Kamal Joardar
-                                </div>
-                            </div>
+                        ?>
 
-                            <div class="active-user-circle"></div>
-                        </div>
-                        <div class="active-user-pro">
-                            <div class="active-user-photo">
-                                <img src="assets/images/me.jpg" class="active-user-pro-pic" alt="">
-                                <div class="active-user-name">
-                                    Tahin Ashab
-                                </div>
-                            </div>
-
-                            <div class="active-user-circle"></div>
-                        </div>
-                        <div class="active-user-pro">
-                            <div class="active-user-photo">
-                                <img src="assets/images/me.jpg" class="active-user-pro-pic" alt="">
-                                <div class="active-user-name">
-                                    Sheikh kalim
-                                </div>
-                            </div>
-
-                            <div class="active-user-circle"></div>
-                        </div>
                     </div>
                 </div>
                 <!--      ///////////..........start profile cover and photo section...........//////////-->
@@ -869,6 +929,132 @@ $profileData = $loadFromUser->userData($profileId);
 
 
                 /////////.........share part end..............///////
+
+
+                /////////.........Freind Request Start..............///////
+                $(document).on('click', '.profile-add-friend', function() {
+                    $(this).find('.edit-profile-button-text').text('Friend Request Sent');
+                    $(this).removeClass().addClass('profile-friend-sent');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        request: profileid,
+                        userid: userid
+                    }, function(data) {
+                        console.log(data)
+                    });
+
+
+                });
+                $(document).on('click', '.accept-req', function() {
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+                    $(this).parent().empty().html('<div class="edit-profile-confirm-button" style="position:relative;"> <div class="con-req align-middle"><img src="assets/images/rightsignGray.JPG" alt="">Friend</div> <div class="request-unfriend" style="" data-userid="' + userid + '" data-profileid="' + profileid + '">Unfriend</div> </div>')
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        confirmRequest: profileid,
+                        userid: userid
+                    }, function(data) {});
+                });
+
+
+
+
+                $(document).on('click', '.profile-follow-button', function() {
+                    $(this).removeClass().addClass('profile-unfollow-button').html('<img src="assets/images/rightsignGray.JPG" alt=""><div class="profile-activity-button-text">Following</div>');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        follow: profileid,
+                        userid: userid
+                    }, function(data) {});
+
+                });
+                $(document).on('click', '.profile-unfollow-button', function() {
+                    $(this).removeClass().addClass('profile-follow-button').html('<img src="assets/images/followGray.JPG" alt=""><div class="profile-activity-button-text">Follow</div>');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        unfollow: profileid,
+                        userid: userid
+                    }, function(data) {});
+
+                });
+
+                $(document).on('click', '.profile-friend-sent', function() {
+
+
+                    $(this).find('.edit-profile-button-text').text('Add Friend');
+                    $(this).removeClass().addClass('profile-add-friend');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        cancelSentRequest: profileid,
+                        userid: userid
+                    }, function(data) {});
+                });
+
+                $(document).on('click', '.request-cancel', function() {
+                    $(this).parents('.profile-friend-confirm').removeClass().addClass('profile-add-friend').html('<img src="assets/images/friendRequestGray.JPG" alt=""><div class="edit-profile-button-text">Add Friend</div>');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        cancelSentRequest: userid,
+                        userid: profileid
+                    }, function(data) {});
+                });
+                $(document).on('click', '.request-unfriend', function() {
+
+                    $(this).parents('.profile-friend-confirm').removeClass().addClass('profile-add-friend').html('<img src="assets/images/friendRequestGray.JPG" alt=""><div class="edit-profile-button-text">Add Friend</div>');
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        unfriendRequest: profileid,
+                        userid: userid
+                    }, function(data) {});
+                });
+
+
+
+
+                $(document).on('click', '.profile-message-button', function() {
+                    location.href = '';
+
+
+
+                });
+                $(document).on('mouseenter', '.edit-profile-confirm-button', function() {
+                    $('.request-cancel').show();
+                    $('.request-unfriend').show();
+                });
+                $(document).on('mouseleave', '.profile-friend-confirm', function() {
+                    $('.request-cancel').hide();
+                    $('.request-unfriend').hide();
+                });
+
+
+
+                //                                    <div class="profile-add-friend">
+                //                                        <img src="assets/images/friendRequestGray.JPG" alt="">
+                //                                        <div class="edit-profile-button-text">Add Friend</div>
+                //                                    </div>
+                //                                    <div class="profile-follow-button" style="border-right: 1px solid gray;">
+                //                                        <img src="assets/images/followGray.JPG" alt="">
+                //                                        <div class="profile-activity-button-text">Follow</div>
+                //                                    </div>
+                //                                    <div class="profile-message-button">
+                //                                        <img src="assets/images/messangerGray.png" alt="">
+                //                                        <div class="profile-activity-button-text">Message</div>
+                //                                    </div>
+
+
+
+                /////////.........Freind Request end..............///////
                 //            function reactCountInc(postId, reactCount, reactNumText) {
                 //
                 //                reactNumText++;
@@ -1573,6 +1759,41 @@ $profileData = $loadFromUser->userData($profileId);
 
 
                 });
+
+                         $(document).on('click', '.post-delete', function() {
+                    var postid = $(this).data('postid');
+                    var userid = $(this).data('userid');
+                    var postContainer = $(this).parents('.profile-timeline');
+
+                    //                    if (confirm() {
+
+
+var r = confirm("Do you want to delete the post?");
+if (r == true) {
+     $.post('http://localhost/facebook/core/ajax/editPost.php', {
+                        deletePost: postid,
+                        userid: userid
+                    }, function(data) {
+
+                        $(postContainer).empty();
+
+                    });
+} else {
+
+}
+
+                    //                        } else {
+                    //                            alert('not confirmed')
+                    //                        })
+
+
+
+                });
+
+
+
+
+
                 $(document).on('click', '.shared-post-delete', function() {
                     var postid = $(this).data('postid');
                     var userid = $(this).data('userid');

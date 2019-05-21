@@ -576,6 +576,7 @@ foreach($shareDetails as $share){
 			return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+
     public function lastCommentFetch($commentid){
         $stmt = $this->pdo->prepare("SELECT * FROM comments INNER JOIN profile ON comments.commentBy = profile.userId WHERE comments.commentID = :commentid");
 			$stmt->bindParam(":commentid", $commentid, PDO::PARAM_INT);
@@ -610,6 +611,7 @@ foreach($shareDetails as $share){
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
 public function postUpd($user_id, $post_id, $editText){
 			$stmt = $this->pdo->prepare("UPDATE `post` SET `post` = :editText WHERE `post_id` = :post_id AND `userId` = :user_id ");
 			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
@@ -645,6 +647,61 @@ public function postUpd($user_id, $post_id, $editText){
 			$stmt->execute();
 
 		}
+public function liveUsers($userid){
+        $stmt = $this->pdo->prepare("SELECT * FROM users LEFT JOIN profile ON users.user_id = profile.userId");
+			$stmt->execute();
+			$liveuser = $stmt->fetchAll(PDO::FETCH_OBJ);
+foreach($liveuser as $user){
+    if($user->user_id == $userid){
+    }else{
+?>
+        <a href="<?php echo $user->userLink; ?>">
+            <div class="active-user-pro">
+                <div class="active-user-photo">
+                    <img src="<?php echo BASE_URL.$user->profilePic; ?>" class="active-user-pro-pic" alt="">
+                    <div class="active-user-name">
+                        <?php echo ''.$user->first_name.' '.$user->last_name.''; ?>
+                    </div>
+                </div>
+
+                <div class="active-user-circle"></div>
+            </div>
+        </a>
+        <?php
+        }
+}
+
+    }
+    public function requestCheck($userid,$profileId){
+        $stmt = $this->pdo->prepare("SELECT * FROM `request` WHERE `reqtReceiver` = :profileid AND `reqtSender` = :userid ");
+			$stmt->bindParam(":profileid", $profileId, PDO::PARAM_INT);
+			$stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+    public function followCheck($profileId, $userid){
+        $stmt = $this->pdo->prepare("SELECT * FROM `follow` WHERE (`sender` = :profileid AND `receiver` = :userid) OR (`sender` = :userid AND `receiver` = :profileid) ");
+			$stmt->bindParam(":profileid", $profileId, PDO::PARAM_INT);
+			$stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+    public function requestConf($profileId, $userid){
+        $stmt = $this->pdo->prepare("SELECT * FROM `request` WHERE `reqtReceiver` =  :userid AND `reqtSender` = :profileid ");
+			$stmt->bindParam(":profileid", $profileId, PDO::PARAM_INT);
+			$stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+    public function updateConfirmReq($profileid, $userid){
+        $stmt = $this->pdo->prepare("UPDATE `request` SET `reqStatus` = '1' WHERE `reqtReceiver` = :user_id AND `reqtSender` = :profileid");
+			$stmt->bindParam(":profileid", $profileid, PDO::PARAM_INT);
+			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+
 
 
 

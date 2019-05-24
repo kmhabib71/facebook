@@ -1,19 +1,26 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+
+
+    </style>
+
+
 </head>
 
 <body>
-    SELECT users.*, post.*, profile.* from users, post, profile WHERE (users.user_id = 30 AND post.postBy = 30 AND profile.userId = 30 AND post.post_id != (select post.post_id from post where post.postBy = 30 AND post.shareId != 'NULL') ) OR (users.user_id = 30 AND profile.userId =30 AND (post.sharedBy = 30 OR post.postBy =30 ) ) ORDER BY post.postedOn DESC LIMIT 10
-
-
-
-
-
+    <div class="about-wrap">
+        <div class="about-header"></div>
+        <div class="about-main">
+            <div class="about-menu"></div>
+            <div class="about-menu-details"></div>
+        </div>
+    </div>
+    <script src="assets/js/about.js"></script>
 </body>
 
 </html>

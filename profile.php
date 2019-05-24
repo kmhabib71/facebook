@@ -37,8 +37,11 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
     <html lang="en">
 
     <head>
-        <meta charset="UTF-8">
+        <!--        <meta charset="UTF-8">-->
+        <meta http-equiv="Content-type" content="text/html; charset=utf8mb4">
         <title>facebook</title>
+        <link rel="stylesheet" href="assets/dist/emojionearea.min.css">
+
         <link rel="stylesheet" href="assets/css/style.css">
         <style>
 
@@ -59,7 +62,15 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                 <img src="assets/images/icons8-search-36.png" alt="">
                             </div>
                         </div>
-                        <div class="search-icon"></div>
+                        <div class="search-icon">
+
+                        </div>
+                        <div id="search-show" style="position:relative;">
+                            <div class="search-result" style="position:absolute;z-index:9;">
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="top_right_part">
@@ -91,7 +102,16 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                         <img src="assets/images/help.png" alt="">
                     </div>
                     <div class="top-more top-css top-icon">
-                        <img src="assets/images/watchmore.png" alt="">
+                        <div class="watchmore-wrap" style="position: absolute;">
+                            <img src="assets/images/watchmore.png" alt="" style="">
+                        </div>
+                        <div class="setting-logout-wrap" style="position:relative;margin-left:-45px;margin-top: 20px;display:none;">
+                            <div class="s-l-wrap" style="position:absolute;background-color:white; color:gray;padding:10px 10px;box-shadow:0 0 5px gray; border-radius:2px;">
+                                <div class="setting-option" style="padding:10px;">Setting</div>
+                                <div class="logout-option" style="padding:10px;">Logout</div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -233,24 +253,24 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                     }else{echo 'Not found';}
 
                                     ?>
-                                                           <?php
+                                                            <?php
                                     if(empty($followCheck)){
                                        ?>
-                                       <div class="profile-follow-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>" style="border-right: 1px solid gray;">
-                                                                <img src="assets/images/followGray.JPG" alt="">
-                                                                <div class="profile-activity-button-text">Follow</div>
-                                                            </div>
-                                        <?php
+                                                                <div class="profile-follow-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>" style="border-right: 1px solid gray;">
+                                                                    <img src="assets/images/followGray.JPG" alt="">
+                                                                    <div class="profile-activity-button-text">Follow</div>
+                                                                </div>
+                                                                <?php
 
 
                                     }else{
                                     ?>
-                                    <div class="profile-unfollow-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>" style="border-right: 1px solid gray;">
-                                                                <img src="assets/images/rightsignGray.JPG" alt="">
-                                                                <div class="profile-activity-button-text">Following</div>
-                                                            </div>
+                                                                    <div class="profile-unfollow-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>" style="border-right: 1px solid gray;">
+                                                                        <img src="assets/images/rightsignGray.JPG" alt="">
+                                                                        <div class="profile-activity-button-text">Following</div>
+                                                                    </div>
 
-                                    <?php
+                                                                    <?php
                                     }
 
                                     ?>
@@ -259,12 +279,12 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
 
 
-                                                            <div class="profile-message-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
-                                                                <img src="assets/images/messangerGray.png" alt="">
-                                                                <div class="profile-activity-button-text">Message</div>
-                                                            </div>
+                                                                        <div class="profile-message-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+                                                                            <img src="assets/images/messangerGray.png" alt="">
+                                                                            <div class="profile-activity-button-text">Message</div>
+                                                                        </div>
 
-                                                            <?php
+                                                                        <?php
 
                                 } ?>
                             </div>
@@ -277,7 +297,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                         <div class="timeline-button align-middle cover-but-css">
                             <div>Timeline</div> <img src="assets/images/profile/timelineDownArrow.JPG" alt="">
                         </div>
-                        <div class="about-button cover-but-css">About</div>
+                        <div class="about-button cover-but-css" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">About</div>
                         <div class="friends-button cover-but-css">Friends</div>
                         <div class="photos-button cover-but-css">Photos</div>
                         <div class="archive-button align-middle cover-but-css">
@@ -339,7 +359,28 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                             <div class="top-pic"><img src="assets/images/me.jpg" alt=""></div>
                                         </div>
                                         <div class="status-prof-textarea">
-                                            <textarea data-autoresize rows="5" columns="5" placeholder="what's going in your mind?" name="textStatus" class="status align-middle"></textarea>
+                                            <textarea data-autoresize rows="5" columns="5" placeholder="what's going in your mind?" name="textStatus" class="status align-middle" id="statusEmoji"></textarea>
+                                            <!--
+                                            <div class="mention-wrap" style="position: absolute;z-index: 2;">
+                                                <ul style="background-color:white;padding:5px;margin-top:0;margin-left:155px;box-shadow:0 0 5px gray;border-radius:3px;">
+                                                    <li class="mention-individuals align-middle" style="background-color:#4267b2;color:white; font-size:12px; padding:3px;margin-bottom:5px;cursor:pointer;">
+                                                        <img src="assets/images/me.jpg" style="height:20px; width:20px; " alt="">
+                                                        <div class="mention-name" style="margin-left:3px;">Farhan Abir</div>
+
+                                                    </li>
+                                                    <li class="mention-individuals align-middle" style="background-color:#4267b2;color:white; font-size:12px; padding:3px;margin-bottom:5px;cursor:pointer;">
+                                                        <img src="assets/images/me.jpg" style="height:20px; width:20px; " alt="">
+                                                        <div class="mention-name" style="margin-left:3px;">Farhan Abir</div>
+
+                                                    </li>
+                                                    <li class="mention-individuals align-middle" style="background-color:#4267b2;color:white; font-size:12px; padding:3px;margin-bottom:5px;cursor:pointer;">
+                                                        <img src="assets/images/me.jpg" style="height:20px; width:20px; " alt="">
+                                                        <div class="mention-name" style="margin-left:3px;">Farhan Abir</div>
+
+                                                    </li>
+                                                </ul>
+                                            </div>
+-->
                                         </div>
                                     </div>
                                     <div class="status-bot">
@@ -414,7 +455,9 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                 </div>
                             </div>
                             <?php } ?>
-                            <?php $loadFromPost->posts($userid, $profileId, 20);?>
+                            <div class="ptaf-wrap">
+                                <?php $loadFromPost->posts($userid, $profileId, 20);?>
+                            </div>
                         </div>
                     </div>
 
@@ -446,6 +489,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
 
         <script src="assets/js/jquery.js"></script>
+        <script src="assets/dist/emojionearea.min.js"></script>
 
         <script>
             //          var preloader = document.getElementById('loading');
@@ -453,6 +497,11 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
             //	function myLoader(){
             //	    preloader.style.display='none';
             //	}
+
+
+
+
+
             jQuery.each(jQuery('textarea[data-autoresize]'), function() {
                 var offset = this.offsetHeight - this.clientHeight;
 
@@ -465,9 +514,76 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
             });
 
             $(document).ready(function() {
+
+
+                $(document).on('click', '.about-button', function() {
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/about.php', {
+                        userid: userid,
+                        profileid: profileid
+                    }, function(data) {
+
+                        $(".status-timeline-wrap").html(data);
+
+
+                    });
+
+
+
+                });
+
+                $(document).on('keyup', 'input#main-search', function() {
+                    var searchText = $(this).val();
+                    if (searchText == '') {
+                        $(".search-result").empty()
+                    } else {
+                        $.post('http://localhost/facebook/core/ajax/search.php', {
+                            searchText: searchText
+                        }, function(data) {
+                            if (data == '') {
+                                alert('Search person nei')
+                            } else {
+                                $(".search-result").html(data);
+                            }
+
+                        });
+                    }
+
+                });
+
+
+                $(document).on('click', '.watchmore-wrap', function() {
+                    $('.setting-logout-wrap').toggle();
+                })
+                $(document).on('click', '.logout-option', function() {
+                    window.location.href = "logout.php"
+                })
+
+                $(document).on('keyup', '.emojionearea-editor', function() {
+                    console.log($(this).text());
+                })
+                $('#statusEmoji').emojioneArea({
+                    pickerPosition: "right",
+                    spellcheck: true
+                })
+                //                $('.comment-submit').emojioneArea({
+                //                    pickerPosition: "right",
+                //                    spellcheck: true
+                //                })
+
+
+
+
+
+
+
+
+
                 $(".status-share-button ").on("click", function() {
 
-                    var statusText = $('.status').val();
+                    var statusText = $('.emojionearea-editor').html();
 
 
 
@@ -701,6 +817,9 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                 $('.status-bot').on('click', function() {
                     $('.status-share-button-wrap').show('0.5');
                 })
+                $(document).on("click", ".emojionearea-editor", function(e) {
+                    $('.status-share-button-wrap').show('0.5');
+                })
                 var fileCollection = new Array();
                 $(document).on("change", "#multiple_files", function(e) {
 
@@ -774,7 +893,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                     var likeReactParent = $(pClass).parents('.like-action-wrap');
 
                     var nf4 = $(likeReactParent).parents('.nf-4');
-                    var nf_3 = $(nf4).siblings('.nf-3');
+                    var nf_3 = $(nf4).siblings('.nf-3').find('.react-count-wrap');
                     var reactCount = $(nf4).siblings('.nf-3').find('.nf-3-react-username');
                     var reactNumText = $(reactCount).text();
 
@@ -844,7 +963,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                     var likeReactParent = $(this).parents('.like-action-wrap');
 
                     var nf4 = $(likeReactParent).parents('.nf-4');
-                    var nf_3 = $(nf4).siblings('.nf-3');
+                    var nf_3 = $(nf4).siblings('.nf-3').find('.react-count-wrap');
                     var reactCount = $(nf4).siblings('.nf-3').find('.nf-3-react-username');
                     var reactIcon = $(nf4).siblings('.nf-3').find('.react-inst-img');
                     var reactNumText = $(reactCount).text();
@@ -1760,7 +1879,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                 });
 
-                         $(document).on('click', '.post-delete', function() {
+                $(document).on('click', '.post-delete', function() {
                     var postid = $(this).data('postid');
                     var userid = $(this).data('userid');
                     var postContainer = $(this).parents('.profile-timeline');
@@ -1768,24 +1887,19 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                     //                    if (confirm() {
 
 
-var r = confirm("Do you want to delete the post?");
-if (r == true) {
-     $.post('http://localhost/facebook/core/ajax/editPost.php', {
-                        deletePost: postid,
-                        userid: userid
-                    }, function(data) {
+                    var r = confirm("Do you want to delete the post?");
+                    if (r == true) {
+                        $.post('http://localhost/facebook/core/ajax/editPost.php', {
+                            deletePost: postid,
+                            userid: userid
+                        }, function(data) {
 
-                        $(postContainer).empty();
+                            $(postContainer).empty();
 
-                    });
-} else {
+                        });
+                    } else {
 
-}
-
-                    //                        } else {
-                    //                            alert('not confirmed')
-                    //                        })
-
+                    }
 
 
                 });
@@ -1867,6 +1981,7 @@ if (r == true) {
                 container.push($('.profile-dialog-show'));
                 container.push($('.top-box'));
                 container.push($('.post-option-details'));
+                container.push($('.setting-logout-wrap'));
                 //            container.push($('#item_2'));
 
                 $.each(container, function(key, value) {
@@ -1898,6 +2013,7 @@ if (r == true) {
             $(document).mouseup(function(e) {
                 var container = new Array();
                 container.push($('.profile-status-write'));
+
 
                 //            container.push($('#item_2'));
 

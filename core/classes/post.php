@@ -18,7 +18,9 @@ class Post extends User {
 			$main_react = $this->main_react($user_id, $post->post_id);
 			$react_max_show = $this->react_max_show($post->post_id);
 			$main_react_count = $this->main_react_count($post->post_id);
-          $commentDetails=$this->CommentFetch($post->post_id);
+            $commentDetails=$this->CommentFetch($post->post_id);
+            $totalCommentCount=$this->totalCommentCount($post->post_id);
+            $totalShareCount=$this->totalShareCount($post->post_id);
             if(empty($post->shareId)){
 
             }else{
@@ -193,9 +195,11 @@ foreach($shareDetails as $share){
                 <!--               .... Post Text End.....-->
 
                 <div class="nf-3">
-                    <div class="nf-3-react-icon">
-                        <div class="react-inst-img align-middle" style="">
-                            <?php
+                    <div class="react-comment-count-wrap" style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
+                        <div class="react-count-wrap align-middle">
+                            <div class="nf-3-react-icon">
+                                <div class="react-inst-img align-middle" style="">
+                                    <?php
 
 
 
@@ -208,13 +212,22 @@ foreach($shareDetails as $share){
                  } ?>
 
 
+                                </div>
+
+                            </div>
+                            <div class="nf-3-react-username">
+                                <!--                        Farhan kabir, Shafiq Rahim and 38 others-->
+                                <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
+
+                            </div>
                         </div>
-
-                    </div>
-                    <div class="nf-3-react-username">
-                        <!--                        Farhan kabir, Shafiq Rahim and 38 others-->
-                        <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
-
+                        <div class="comment-share-count-wrap align-middle" style="font-size:12px; color:gray;">
+                            <div class="comment-count-wrap" style="margin-right:10px;">
+                                <?php if(empty($totalCommentCount->totalComment)){}else{ echo ''.$totalCommentCount->totalComment.' Comments'; }?> </div>
+                            <div class="share-count-wrap">
+                                <?php if(empty($totalShareCount->totalShare)){}else{ echo ''.$totalShareCount->totalShare.' Shares'; }?>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="nf-4">
@@ -253,7 +266,12 @@ foreach($shareDetails as $share){
                         <div class="comment-action-icon">
                             <img src="assets/images/commentAction.JPG" alt="">
                         </div>
-                        <div class="comment-action-text">Comment</div>
+                        <div class="comment-action-text">
+                            <div class="comment-count-text-wrap">
+                                <div class="comment-count"></div>
+                                <div class="comment-text">Comment</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="share-action ra" data-postId="<?php echo $post->post_id; ?>" data-userid="<?php echo $user_id; ?>" data-profileid="<?php echo $profileId; ?>" data-profilepic="<?php echo $userdata->profilePic; ?>">
                         <div class="share-action-icon"><img src="assets/images/shareAction.JPG" alt=""></div>
@@ -596,6 +614,18 @@ foreach($shareDetails as $share){
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+    public function totalCommentCount($postid){
+        $stmt = $this->pdo->prepare("SELECT count(*) as totalComment FROM comments WHERE comments.commentOn = :postid");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+    public function totalShareCount($postid){
+        $stmt = $this->pdo->prepare("SELECT count(*) as totalShare FROM post WHERE post.shareId = :postid");
+			$stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
     public function shareFetch($shareid,$profileId){
         $stmt = $this->pdo->prepare("SELECT users.*, post.*, profile.* from users, post, profile WHERE users.user_id = :user_id AND post.post_id = :postid AND profile.userId = :user_id");
 			$stmt->bindParam(":postid", $shareid, PDO::PARAM_INT);
@@ -699,6 +729,13 @@ foreach($liveuser as $user){
 			$stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+    public function searchText($search){
+    $stmt = $this->pdo->prepare("SELECT * FROM users LEFT JOIN profile ON users.user_id = profile.userId WHERE users.userLink LIKE ? ");
+			$stmt->bindValue(1, $search.'%', PDO::PARAM_STR);
+
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
 

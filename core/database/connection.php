@@ -1,5 +1,5 @@
 <?php
-$dsn = 'mysql:host=localhost; dbname=fb; charset=utf8';
+$dsn = 'mysql:host=localhost; dbname=fb; charset=utf8mb4';
 $user = 'root';
 $pass = '';
 

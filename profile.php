@@ -489,6 +489,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
 
         <script src="assets/js/jquery.js"></script>
+        <script src="assets/js/about.js"></script>
         <script src="assets/dist/emojionearea.min.js"></script>
 
         <script>
@@ -525,7 +526,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                         profileid: profileid
                     }, function(data) {
 
-                        $(".status-timeline-wrap").html(data);
+                        $(".bio-timeline").html(data);
 
 
                     });

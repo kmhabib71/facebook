@@ -166,7 +166,7 @@ public function allPhoto($profileId){
 			foreach ($fields as $key => $value){
 				$stmt->bindValue(':'.$key, $value);
 			}
-			// var_dump($sql);
+
 			$stmt->execute();
 		}
 	}
@@ -323,6 +323,57 @@ public function checkPassword($password){
 				return ''.date('j M Y', $time);
 			}
 		}
+
+//    //////////////................About section....................../////////////
+//public function aboutSubmit($submitType, $inputVal, $userid,$profileid){
+//			$stmt = $this->pdo->prepare("UPDATE profile SET :submitType = :inputValue WHERE `postID` = :post_id");
+//			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+//			$stmt->execute();
+//
+//			$stmt = $this->pdo->prepare("DELETE FROM `likes` WHERE `likeBy` = :user_id AND `likeOn` = :post_id");
+//			$stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+//			$stmt->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+//			$stmt->execute();
+//		}
+
+//    public function profileUpdate($user_id, $fields = array()){
+//		$columns = '';
+//		$i       = 1;
+//
+//		foreach ($fields as $name => $value){
+//			$columns .= "`{$name}` = :{$name}";
+//			if($i < count($fields)){
+//				$columns .= ', ';
+//			}
+//			$i++;
+//		}
+//		$sql = "UPDATE `profile` SET {$columns} WHERE `userId` = {$user_id}";
+//		if($stmt = $this->pdo->prepare($sql)){
+//			foreach ($fields as $key => $value){
+//				$stmt->bindValue(':'.$key, $value);
+//			}
+//			// var_dump($sql);
+//			$stmt->execute();
+//		}
+//	}
+
+
+
+
+
+
+
+//    //////////////................About section end....................../////////////
+
+
+
+
+
+
+
+
+
+
 
 	}
 

@@ -1792,10 +1792,140 @@ li.new-comment {
 /*.......................///////About section start//////...................*/
 .about-wrap {
     margin: 10px 0;
-    background-color: white;
-    padding: 10px;
+    background-color: #e9ebee;
+    /*    padding: 10px;*/
+
     border-radius: 3px;
     box-shadow: 0px 0px 1px grey;
+    width: 100%;
+}
+.about-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 29px;
+    padding: 16px 0 12px 15px;
+    background-color: #f5f6f7;
+    border-bottom: 1px solid #f5f6f7;
+    border-radius: 2px 2px 0 0;
+}
+.about-text {
+    font-size: 19px;
+    font-weight: 600;
+    color: #524f4f;
+    margin-left: 10px;
+}
+.about-main {
+    background-color: white;
+    display: flex;
+}
+.about-menu {
+    background-color: white;
+    flex-basis: 30%;
+    border-right: 1px solid lightgray;
+    ;
+}
+.about-menu-details {
+    background-color: white;
+    flex-basis: 70%;
+}
+.about-menu ul li {
+    margin-bottom: 23px;
+    padding-left: 18px;
+    font-size: 13px;
+    color: gray;
+    cursor: pointer;
+}
+.about-menu ul li:hover {
+    margin-bottom: 23px;
+    padding-left: 14px;
+    font-size: 13px;
+    color: black;
+    cursor: pointer;
+    border-left: 4px solid #4267B2;
+}
+.activeAbout {
+    color: black;
+    font-weight: 600;
+}
+.overview-wrap {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: flex-start;
+}
+.overview-left {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.add-workplace.align-middle,
+.add-school.align-middle,
+.add-place.align-middle,
+.add-relationship.align-middle,
+.add-current-city.align-middle,
+.add-other-place.align-middle,
+.add-professional-skill.align-middle,
+.add-college.align-middle,
+.add-highSchool.align-middle,
+.add-professional.align-middle {
+    color: #3578e5;
+    cursor: pointer;
+}
+.plus-square {
+    padding: 7px 12px;
+    border: 1px dashed;
+    margin-right: 10px;
+}
+.overview-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 11px;
+    color: #5a5a5a;
+}
+.about-work-heading {
+    color: #a5a5a5;
+    font-size: 13px;
+    font-weight: 600;
+    /*    padding-bottom: 5px;*/
+}
+.about-border {
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    margin: 12px 0px;
+}
+.contact-mobile-number {
+    font-size: 13px;
+    color: black;
+}
+.contact-mobile-text,
+.contact-id-text {
+    font-size: 13px;
+    color: gray;
+}
+.contact-id-number {
+    font-size: 14px;
+    font-weight: 600;
+}
+input.about-class {
+    height: 26px;
+    width: 100%;
+    border: 1px solid lightgray;
+    border-radius: 2px;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.about-submit {
+    background-color: #4267B2;
+    display: inline-block;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 /*.......................///////About section End//////...................*/

@@ -1864,11 +1864,21 @@ li.new-comment {
 .add-school.align-middle,
 .add-place.align-middle,
 .add-relationship.align-middle,
-.add-current-city.align-middle,
-.add-other-place.align-middle,
-.add-professional-skill.align-middle,
+.add-currentCity.align-middle,
+.add-otherPlace.align-middle,
+.add-hometown.align-middle,
 .add-college.align-middle,
 .add-highSchool.align-middle,
+.add-address.align-middle,
+.add-website.align-middle,
+.add-socialLink.align-middle,
+.add-language.align-middle,
+.add-religion.align-middle,
+.add-politicalViews.align-middle,
+.add-relationship.align-middle,
+.add-aboutYou.align-middle,
+.add-quotes.align-middle,
+.add-otherName.align-middle,
 .add-professional.align-middle {
     color: #3578e5;
     cursor: pointer;
@@ -1889,6 +1899,7 @@ li.new-comment {
     color: #a5a5a5;
     font-size: 13px;
     font-weight: 600;
+    margin-bottom: -0px;
     /*    padding-bottom: 5px;*/
 }
 .about-border {
@@ -1925,6 +1936,14 @@ input.about-class {
     font-weight: 600;
     padding: 6px 10px;
     border-radius: 3px;
+    cursor: pointer;
+}
+.about-success {
+    color: #4267b2;
+    font-size: 12px;
+    font-weight: 600;
+}
+.setting {
     cursor: pointer;
 }
 

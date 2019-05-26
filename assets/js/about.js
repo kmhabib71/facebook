@@ -1,27 +1,34 @@
 $(document).ready(function () {
 
+    $(document).on('click', '.setting', function () {
+
+        window.location.href = "http://localhost/facebook/settings.php";
+    })
+
+
+
+
+    //......................Overview.....................//
     $(document).on('click', 'li.overview', function () {
         $('.activeAbout').removeClass();
         $(this).find('span').addClass('activeAbout');
         var userid = $(this).data("userid");
         var profileid = $(this).data("profileid");
 
-        $('.about-menu-details').html(' <div class="overview-wrap" style=""> <div class="overview-left"> <div class="add-workplace align-middle" data-userid="' + userid + '" data-profileid="' + profileid + ' " style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-workplace-text" style="font-size:15px;">Add workplace</div> </div> <div class="add-school align-middle" data-userid="' + userid + '" data-profileid="' + profileid + ' " style="margin: 20px 0 20px 0;"> <div class="plus-square">+</div> <div class="add-school-text" style="font-size:15px;">Add school</div> </div> <div class="add-place align-middle" data-userid="' + userid + '" data-profileid="' + profileid + ' " style="margin: 20px 0 20px 0;"> <div class="plus-square">+</div> <div class="add-place-text" style="font-size:15px;">Add place</div> </div> <div class="add-relationship align-middle" data-userid="' + userid + '" data-profileid="' + profileid + ' " style="margin: 20px 0 20px 0;"> <div class="plus-square">+</div> <div class="add-relationship-text" style="font-size:15px;">Add relationship</div> </div> </div> <div class="overview-right"> <div class="overview-mobile align-middle" data-userid="' + userid + '" data-profileid="' + profileid + ' " style="margin-bottom:10px;"> <div class="overview-mobile-icon"><img src="../../assets/images/profile/overview%20mobile.JPG" alt="" style="margin-right:5px;"></div> <div class="overview-mobile-number">01815-667719</div> </div> <div class="overview-birthday align-middle" data-userid="' + userid + '" data-profileid="' + profileid + ' "> <div class="overview-mobile-icon"> <img src="../../assets/images/profile/overview%20birthday.JPG" alt="" style="margin-right:5px;"></div> <div class="overview-mobile-number">29th January 1990</div> </div> </div> </div>');
+        $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
+            overview: userid,
+            profileid: profileid
+        }, function (data) {
+            $('.about-menu-details').html(data);
 
+        });
     })
 
-    $(document).on('click', '.add-workplace', function () {
-
-
-    })
+    //......................Overview End.....................//
 
 
 
-
-
-
-
-
+    //......................Work & Education.....................//
 
     $(document).on('click', 'li.work-education', function () {
         $('.activeAbout').removeClass();
@@ -30,17 +37,10 @@ $(document).ready(function () {
         var profileid = $(this).data("profileid");
 
         $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
-            dataFetch: userid
+            workEducation: userid,
+            profileid: profileid
         }, function (data) {
-            //            $(db_returnClass).empty().html('<span style="color:gray; font-size:12px;">' + data + '</span>');
-
-
-            //            (name === 'true') ? 'Y' : 'N';
-            //            data['screenName']
-
-
-
-            $('.about-menu-details').html('<div class="overview-wrap" style=""> <div class="overview-left"> <div class="about-work-heading">WORK</div> <div class="about-border"></div> <div class="add-workplace align-middle" data-userid="' + userid + '" data-profileid="' + profileid + '" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-workplace-text" style="font-size:15px;">Add a workplace</div> </div> <br> <div class="about-work-heading">' + data[8] + 'PROFESSIONAL SKILL</div> <div class="about-border"></div> <div class="add-professional align-middle" data-userid="' + userid + '" data-profileid="' + profileid + '" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-professional-text" style="font-size:15px;">Add a professional skill</div> </div> <br> <div class="about-work-heading">COLLEGE</div> <div class="about-border"></div> <div class="add-college align-middle" data-userid="' + userid + '" data-profileid="' + profileid + '" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-place-text" style="font-size:15px;">Add a college</div> </div> <br> <div class="about-work-heading">HIGH SCHOOL</div> <div class="about-border"></div> <div class="add-highSchool align-middle" data-userid="' + userid + '" data-profileid="' + profileid + '" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-highSchool-text" style="font-size:15px;">Add a high school</div> </div> </div> </div>');
+            $('.about-menu-details').html(data);
 
         });
     })
@@ -52,6 +52,7 @@ $(document).ready(function () {
         $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="workplace-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
 
     })
+
     $(document).on('click', '.workplace-submit.about-submit', function () {
 
         $(this).parents('.db-return').removeClass().addClass('add-workplace align-middle');
@@ -119,39 +120,386 @@ $(document).ready(function () {
 
     })
 
+    //......................Work & Education End.....................//
 
 
-
-
-
-
-
+    //......................places you lived.....................//
 
     $(document).on('click', 'li.places-lived', function () {
         $('.activeAbout').removeClass();
         $(this).find('span').addClass('activeAbout');
-        $('.about-menu-details').html('<div class="overview-wrap" style=""> <div class="overview-left"> <div class="about-work-heading">CURRENT CITY AND HOMETOWN</div> <div class="about-border"></div> <div class="add-current-city align-middle" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-workplace-text">Add your current city</div> </div> <br> <div class="add-professional-skill align-middle" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-school-text">Add your hometown</div> </div> <br> <div class="about-work-heading">OTHER PLACES LIVED</div> <div class="about-border"></div> <div class="add-other-place align-middle" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-place-text">Add a place</div> </div> <br> </div> </div>');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+
+        $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
+            placesLived: userid,
+            profileid: profileid
+        }, function (data) {
+            $('.about-menu-details').html(data);
+
+        });
+
+
+
     })
+
+    $(document).on('click', '.add-currentCity.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="currentCity-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.currentCity-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-currentCity align-middle');
+        var db_returnClass = $(this).parents('.add-currentCity.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('currentCity', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-hometown.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="hometown-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.hometown-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-hometown align-middle');
+        var db_returnClass = $(this).parents('.add-hometown.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('hometown', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-otherPlace.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="otherPlace-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.otherPlace-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-otherPlace align-middle');
+        var db_returnClass = $(this).parents('.add-otherPlace.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('otherPlace', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+
+    //......................places you lived End.....................//
+
+
+
+    //......................Contact And Basic Info .....................//
     $(document).on('click', 'li.contact-basic', function () {
         $('.activeAbout').removeClass();
         $(this).find('span').addClass('activeAbout');
-        $('.about-menu-details').html('<div class="overview-wrap" style=""> <div class="overview-left"> <div class="about-work-heading">CURRENT CITY AND HOMETOWN</div> <div class="about-border"></div> <div class="contact-mobile" style="width: 100%;display:flex; "> <div class="contact-mobile-text" style="flex-basis:40%">Mobile Phones</div> <div class="contact-mobile-number" style="flex-basis:60%">01815-667719</div> </div> <div class="about-border"></div> <div class="contact-id" style="width: 100%;display:flex; "> <div class="contact-id-text" style="flex-basis:40%">Facebook</div> <div class="contact-id-number" style="flex-basis:60%">http:localhost/facebook/mesha_shafi</div> </div> <div class="about-border"></div> <div class="contact-add-address" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-address-text" style="font-size:13px;">Add your address</div> </div> <br> <br> <div class="about-work-heading">WEBSITE AND SOCIAL LINKS</div> <div class="about-border"></div> <div class="contact-add-website" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-website-text" style="font-size:13px;">Add a website</div> </div> <div class="about-border"></div> <div class="contact-add-social" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-social-text" style="font-size:13px;">Add a social link</div> </div> <br> <br> <div class="about-work-heading">BASIC INFORMATION</div> <div class="about-border"></div> <div class="contact-birthday" style="width: 100%;display:flex; "> <div class="contact-birthday-text" style="flex-basis:40%;font-size: 13px;color: gray;">Birth Date</div> <div class="contact-birthday-date" style="flex-basis:60%;font-size: 13px;color: black;">January 29</div> </div> <div class="about-border"></div> <div class="contact-birthyear" style="width: 100%;display:flex; "> <div class="contact-birthyear-text" style="flex-basis:40%;font-size: 13px;color: gray;"> Birth Year</div> <div class="contact-birthyear-date" style="flex-basis:60%;font-size: 13px;color: black;">1990</div> </div> <div class="about-border"></div> <div class="contact-gender" style="width: 100%;display:flex; "> <div class="contact-gender-text" style="flex-basis:40%;font-size: 13px;color: gray;">Gender</div> <div class="contact-gender-date" style="flex-basis:60%;font-size: 13px;color: black;">Male</div> </div> <div class="about-border"></div> <div class="contact-add-language" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-language-text" style="font-size:13px;">Add a language</div> </div> <div class="about-border"></div> <div class="contact-add-religious" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-religious-text" style="font-size:13px;">Add your religious views</div> </div> <div class="about-border"></div> <div class="contact-add-political" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-political-text" style="font-size:13px;">Add your political views</div> </div> </div> </div>');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+
+        $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
+            contactBasic: userid,
+            profileid: profileid
+        }, function (data) {
+            $('.about-menu-details').html(data);
+
+        });
     })
+
+
+    $(document).on('click', '.add-address.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="address-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.address-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-address align-middle');
+        var db_returnClass = $(this).parents('.add-address.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('address', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-website.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="website-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.website-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-website align-middle');
+        var db_returnClass = $(this).parents('.add-website.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('website', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-socialLink.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="socialLink-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.socialLink-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-socialLink align-middle');
+        var db_returnClass = $(this).parents('.add-socialLink.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('socialLink', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-language.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="language-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.language-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-language align-middle');
+        var db_returnClass = $(this).parents('.add-language.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('language', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-religion.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="religion-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.religion-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-religion align-middle');
+        var db_returnClass = $(this).parents('.add-religion.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('religion', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-politicalViews.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Company, position, City"> <div class="politicalViews-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.politicalViews-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-politicalViews align-middle');
+        var db_returnClass = $(this).parents('.add-politicalViews.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('politicalViews', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+
+
+    //......................Contact And Basic Info End.....................//
+
+
+    //......................Family And Relationship  .....................//
+
     $(document).on('click', 'li.family-relation', function () {
         $('.activeAbout').removeClass();
         $(this).find('span').addClass('activeAbout');
-        $('.about-menu-details').html('<div class="overview-wrap" style=""> <div class="overview-left"> <div class="about-work-heading">RELATIONSHIP</div> <div class="about-border"></div> <div class="add-workplace align-middle" style="margin: 0 0 20px 0;"> <div class="plus-square">+</div> <div class="add-workplace-text" style="font-size:15px;">Add your relationship status</div> </div> <br> </div> </div>');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+
+        $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
+            familyRelation: userid,
+            profileid: profileid
+        }, function (data) {
+            $('.about-menu-details').html(data);
+
+        });
     })
+
+    $(document).on('click', '.add-relationship.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Single, Married, Complicated"> <div class="relationship-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.relationship-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-relationship align-middle');
+        var db_returnClass = $(this).parents('.add-relationship.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('relationship', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+
+    //......................Family And Relationship  End.....................//
+
+    //......................Details About you  .....................//
+
     $(document).on('click', 'li.details-you', function () {
         $('.activeAbout').removeClass();
         $(this).find('span').addClass('activeAbout');
-        $('.about-menu-details').html('<div class="overview-wrap" style=""> <div class="overview-left"> <div class="about-work-heading">ABOUT YOU</div> <div class="about-border"></div> <div class="contact-add-details" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-details-text" style="font-size:13px;">Add some details about yourself</div> </div> <br> <br> <div class="about-work-heading">OTHER NAMES</div> <div class="about-border"></div> <div class="contact-add-other" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-other-text" style="font-size:13px;">Add a nickname, a birth name</div> </div><br> <br> <div class="about-work-heading">FABORIT QUOTES</div> <div class="about-border"></div> <div class="contact-add-other" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-other-text" style="font-size:13px;">Add your favorite quotations</div> </div> </div> </div>');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+
+        $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
+            aboutYou: userid,
+            profileid: profileid
+        }, function (data) {
+            $('.about-menu-details').html(data);
+
+        });
     })
+
+    $(document).on('click', '.add-aboutYou.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Single, Married, Complicated"> <div class="aboutYou-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.aboutYou-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-aboutYou align-middle');
+        var db_returnClass = $(this).parents('.add-aboutYou.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('aboutYou', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-quotes.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Single, Married, Complicated"> <div class="quotes-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.quotes-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-quotes align-middle');
+        var db_returnClass = $(this).parents('.add-quotes.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('quotes', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    $(document).on('click', '.add-otherName.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Single, Married, Complicated"> <div class="otherName-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.otherName-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-otherName align-middle');
+        var db_returnClass = $(this).parents('.add-otherName.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('otherName', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+
+
+    //......................Details About you  End.....................//
+
+    //......................Life Events  .....................//
+
     $(document).on('click', 'li.life-events', function () {
         $('.activeAbout').removeClass();
         $(this).find('span').addClass('activeAbout');
-        $('.about-menu-details').html(' <div class="overview-wrap" style=""> <div class="overview-left"> <div class="about-work-heading">LIFE EVENTS</div> <div class="about-border"></div> <div class="contact-add-life-event" style="width: 100%;display:flex;color: #3578e5;cursor: pointer; "> <div class="contact-plus" style="margin-right:10px;">+</div> <div class="contact-add-life-event-text" style="font-size:13px;">Add a life event</div> </div> <br> </div> </div>');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+
+        $.post('http://localhost/facebook/core/ajax/aboutSubmit.php', {
+            lifeEvent: userid,
+            profileid: profileid
+        }, function (data) {
+            $('.about-menu-details').html(data);
+
+        });
     })
+    $(document).on('click', '.add-lifeEvent.align-middle', function () {
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        $(this).removeClass().addClass('db-return');
+        $(this).html('<div><input type="text" name="textfield" class="about-class" placeholder="Single, Married, Complicated"> <div class="lifeEvent-submit about-submit" data-userid="' + userid + '" data-profileid="' + profileid + '">Save Changes</div></div>');
+
+    })
+
+    $(document).on('click', '.lifeEvent-submit.about-submit', function () {
+
+        $(this).parents('.db-return').removeClass().addClass('add-lifeEvent align-middle');
+        var db_returnClass = $(this).parents('.add-lifeEvent.align-middle');
+        var userid = $(this).data("userid");
+        var profileid = $(this).data("profileid");
+        var dbReturn = $(this).parents('.db-return');
+        var inputVal = $(this).siblings('.about-class').val();
+        aboutSubmit('lifeEvent', inputVal, userid, profileid, dbReturn, db_returnClass);
+
+    })
+    //......................Life Events  End.....................//
+
+
+
+
+
+
 
 
 
@@ -162,7 +510,7 @@ $(document).ready(function () {
             userid: userid,
             profileid: profileid
         }, function (data) {
-            $(db_returnClass).empty().html('<span style="color:gray; font-size:12px;">' + data + '</span>');
+            $(db_returnClass).empty().html('<span class="about-success" style="">' + data + '</span>');
         });
 
     };

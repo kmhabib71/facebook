@@ -737,6 +737,26 @@ foreach($liveuser as $user){
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+    public function friendsdata($profileid){
+    $stmt = $this->pdo->prepare("SELECT * FROM request LEFT JOIN profile ON profile.userId = request.reqtReceiver LEFT JOIN users ON users.user_id = request.reqtReceiver WHERE request.reqtSender = :profileid AND request.reqStatus = '1'
+UNION
+SELECT * FROM request LEFT JOIN profile ON profile.userId = request.reqtSender LEFT JOIN users ON users.user_id = request.reqtSender WHERE request.reqtReceiver = :profileid  AND request.reqStatus = '1' ");
+			$stmt->bindParam(":profileid", $profileid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    public function followersdata($profileid){
+    $stmt = $this->pdo->prepare("SELECT * FROM follow LEFT JOIN profile ON profile.userId = follow.sender LEFT JOIN users ON users.user_id = follow.sender WHERE follow.receiver = :profileid");
+			$stmt->bindParam(":profileid", $profileid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    public function requestData($profileid){
+    $stmt = $this->pdo->prepare("SELECT count(*) as reqCount FROM request where reqStatus = 0 AND reqtReceiver = :profileid  ");
+			$stmt->bindParam(":profileid", $profileid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+    }
 
 
 

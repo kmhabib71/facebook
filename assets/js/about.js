@@ -4,6 +4,18 @@ $(document).ready(function () {
 
         window.location.href = "http://localhost/facebook/settings.php";
     })
+    $(document).on('click', '.friend-tab', function () {
+
+
+        $(this).parents('.friend-follower-wrap').find('.friend-tab-open').show();
+        $(this).parents('.friend-follower-wrap').find('.follower-tab-open').hide();
+    })
+    $(document).on('click', '.follow-tab', function () {
+
+
+        $(this).parents('.friend-follower-wrap').find('.follower-tab-open').show();
+        $(this).parents('.friend-follower-wrap').find('.friend-tab-open').hide();
+    })
 
 
 

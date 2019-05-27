@@ -1777,6 +1777,8 @@ li.new-comment {
     margin-left: -11px;
     display: none;
 }
+
+/*
 .request-unfriend:hover {
     position: absolute;
     margin-top: 3px;
@@ -1788,6 +1790,7 @@ li.new-comment {
     margin-left: -11px;
     display: none;
 }
+*/
 
 /*.......................///////About section start//////...................*/
 .about-wrap {

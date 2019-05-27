@@ -1053,6 +1053,8 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                 /////////.........Freind Request Start..............///////
                 $(document).on('click', '.profile-add-friend', function() {
+                    $(this).parents('.profile-action').find('.profile-follow-button').removeClass().addClass('profile-unfollow-button').html('<img src="assets/images/rightsignGray.JPG" alt=""><div class="profile-activity-button-text">Following</div>');
+
                     $(this).find('.edit-profile-button-text').text('Friend Request Sent');
                     $(this).removeClass().addClass('profile-friend-sent');
                     var userid = $(this).data('userid');
@@ -1064,6 +1066,11 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                     }, function(data) {
                         console.log(data)
                     });
+
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        follow: profileid,
+                        userid: userid
+                    }, function(data) {});
 
 
                 });
@@ -1105,7 +1112,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                 $(document).on('click', '.profile-friend-sent', function() {
 
-
+                    $(this).parents('.profile-action').find('.profile-unfollow-button').removeClass().addClass('profile-follow-button').html('<img src="assets/images/followGray.JPG" alt=""><div class="profile-activity-button-text">Follow</div>');
                     $(this).find('.edit-profile-button-text').text('Add Friend');
                     $(this).removeClass().addClass('profile-add-friend');
                     var userid = $(this).data('userid');
@@ -1113,6 +1120,10 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                     $.post('http://localhost/facebook/core/ajax/request.php', {
                         cancelSentRequest: profileid,
+                        userid: userid
+                    }, function(data) {});
+                    $.post('http://localhost/facebook/core/ajax/request.php', {
+                        unfollow: profileid,
                         userid: userid
                     }, function(data) {});
                 });
@@ -1149,12 +1160,16 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                 });
                 $(document).on('mouseenter', '.edit-profile-confirm-button', function() {
-                    $('.request-cancel').show();
-                    $('.request-unfriend').show();
+                    var reqCancel = $(this).find('.request-cancel');
+                    var reqUnfriend = $(this).find('.request-unfriend');
+                    $(reqCancel).show();
+                    $(reqUnfriend).show();
                 });
                 $(document).on('mouseleave', '.profile-friend-confirm', function() {
-                    $('.request-cancel').hide();
-                    $('.request-unfriend').hide();
+                    var reqCancel = $(this).find('.request-cancel');
+                    var reqUnfriend = $(this).find('.request-unfriend');
+                    $(reqCancel).hide();
+                    $(reqUnfriend).hide();
                 });
 
 

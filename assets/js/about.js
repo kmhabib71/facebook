@@ -1,9 +1,21 @@
 $(document).ready(function () {
 
+    $(document).on('click', '.top-area', function () {
+        $(this).parents('.top-box-show').empty();
+    })
+    $(document).on('click', '.postImage', function () {
+        var userid = $(this).data('userid');
+        var profileid = $(this).data('profileid');
+        var postid = $(this).data('postid');
+        var imageid = $(this).data('imageid');
+        var imgSrc = $(this).attr('src');
+        $('.top-box-show').html('<div class="top-wrap" style="position: absolute;top: 0px;bottom: 0px;right: 0px;justify-content: center;left: 0px;display: flex;justify-content: flex-end;"> <div class="top-img align-middle" style="    position: fixed;z-index: 9;top: 0;text-align: center;height: 100vh;width: 493px;background-color: white;left: 0;margin-left: 30%;"> <img src="' + imgSrc + '" alt="" style="max-width:493px;position: fixed;left: 0;position: fixed;margin-left: 30%;">  </div><div style="width: 360px;height: 100vh;background-color: white;position: fixed;z-index: 99;right: 25%;display:none;">   </div> <div class="top-area" style="position: fixed; top: 0; bottom: 0; background-color: #000000c9;width: 100vw; height: 100vh;overflow-y: scroll;display: block; "> </div> </div>')
+
+    });
     $(document).on('click', '.setting', function () {
 
         window.location.href = "http://localhost/facebook/settings.php";
-    })
+    });
     $(document).on('click', '.friend-tab', function () {
 
 

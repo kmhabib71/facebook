@@ -147,9 +147,6 @@ foreach($shareDetails as $share){
                                     echo '<div class="post-img-box" data-postImgID="'.$share->id.'" style="max-height: 400px;
     overflow: hidden;"><img src="'.BASE_URL.$shareImgJson[''.$shareCount++.'']->imageName.'" alt="" style="width: 100%;"></div>';
                                 }
-
-
-
                         ?>
                                     </div>
 
@@ -182,8 +179,8 @@ foreach($shareDetails as $share){
                         <?php $imgJson = json_decode($post->postImage);
                             $count = 0;
                                 for($i = 0; $i < count($imgJson); $i++) {
-                                    echo '<div class="post-img-box" data-postImgID="'.$post->id.'" style="max-height: 400px;
-    overflow: hidden;"><img src="'.BASE_URL.$imgJson[''.$count++.'']->imageName.'" alt="" style="width: 100%;"></div>';
+                                    echo '  <div class="post-img-box" data-postImgID="'.$post->id.'" style="max-height: 400px;
+    overflow: hidden;"><img src="'.BASE_URL.$imgJson[''.$count++.'']->imageName.'" class="postImage" alt="" style="width: 100%;cursor:pointer;"></div>';
                                 }
 
 
@@ -747,6 +744,12 @@ SELECT * FROM request LEFT JOIN profile ON profile.userId = request.reqtSender L
     }
     public function followersdata($profileid){
     $stmt = $this->pdo->prepare("SELECT * FROM follow LEFT JOIN profile ON profile.userId = follow.sender LEFT JOIN users ON users.user_id = follow.sender WHERE follow.receiver = :profileid");
+			$stmt->bindParam(":profileid", $profileid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    public function yourPhoto($profileid){
+    $stmt = $this->pdo->prepare("SELECT * FROM `post` WHERE postImage != '' and postBy = :profileid");
 			$stmt->bindParam(":profileid", $profileid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_OBJ);

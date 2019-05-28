@@ -81,7 +81,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                 <?php echo $userData->first_name; ?> </div>
                         </a>
                     </div>
-                    <a href="home.php">
+                    <a href="index.php">
                         <div class="top-home top-css border-left">
                             Home
                         </div>
@@ -177,10 +177,11 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                 <?php
                                 if($userid == $profileId){
                                 ?>
-                                    <div class="profile-edit-button">
+                                    <div class="profile-edit-button" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
                                         <img src="assets/images/profile/editProfile.JPG" alt="">
-                                        <div class="edit-profile-button-text">Edit Profile</div>
+                                        <div class="edit-profile-button-text" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">Edit Profile</div>
                                     </div>
+                                    <!--
                                     <div class="profile-activity-button">
                                         <img src="assets/images/profile/activityLog.JPG" alt="">
                                         <div class="profile-activity-button-text">Edit Profile</div>
@@ -188,6 +189,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                                     <div class="dot-wrap">
                                         <div class="profile-activity-button-dot"> ... </div>
                                     </div>
+-->
                                     <?php }else{
                                     if(empty($requestCheck)){
 
@@ -294,18 +296,21 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                     </div>
                     <div class="cover-bottom-part">
-                        <div class="timeline-button align-middle cover-but-css">
-                            <div>Timeline</div> <img src="assets/images/profile/timelineDownArrow.JPG" alt="">
+                        <div class="timeline-button align-middle cover-but-css" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">
+                            <div>Timeline</div>
                         </div>
                         <div class="about-button cover-but-css" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">About</div>
-                        <div class="friends-button cover-but-css">Friends</div>
-                        <div class="photos-button cover-but-css">Photos</div>
+                        <div class="friends-button cover-but-css" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">Friends</div>
+                        <div class="photos-button cover-but-css" data-userid="<?php echo $userid; ?>" data-profileid="<?php  echo $profileId; ?>">Photos</div>
+                        <!--
                         <div class="archive-button align-middle cover-but-css">
                             <img src="assets/images/profile/archive.JPG" alt="">
                             <div>Archive</div>
                         </div>
                         <div class="more-button align-middle cover-but-css">
-                            <div>More</div> <img src="assets/images/profile/more.JPG" alt=""></div>
+                            <div>More</div> <img src="assets/images/profile/more.JPG" alt="">
+                            </div>
+-->
                     </div>
                     <div class="bio-timeline">
                         <div class="bio-wrap">
@@ -517,7 +522,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
             $(document).ready(function() {
 
 
-                $(document).on('click', '.about-button', function() {
+                $(document).on('click', '.about-button, .profile-edit-button', function() {
                     var userid = $(this).data('userid');
                     var profileid = $(this).data('profileid');
 
@@ -532,6 +537,59 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                     });
 
 
+
+                });
+                $(document).on('click', '.friends-button', function() {
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/friend.php', {
+                        userid: userid,
+                        profileid: profileid
+                    }, function(data) {
+
+                        $(".bio-timeline").html(data);
+
+
+                    });
+
+                });
+                $(document).on('click', '.photos-button', function() {
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/photo.php', {
+                        userid: userid,
+                        profileid: profileid
+                    }, function(data) {
+
+                        $(".bio-timeline").html(data);
+
+
+                    });
+
+                });
+                $(document).on('click', '.timeline-button', function() {
+                    var userid = $(this).data('userid');
+                    var profileid = $(this).data('profileid');
+
+                    $.post('http://localhost/facebook/core/ajax/timeline.php', {
+                        userid: userid,
+                        profileid: profileid
+                    }, function(data) {
+
+                        $(".bio-timeline").html(data);
+
+                        $(document).on('keyup', '.emojionearea-editor', function() {
+                            console.log($(this).text());
+                        })
+                        $('#statusEmoji').emojioneArea({
+                            pickerPosition: "right",
+                            spellcheck: true
+                        })
+
+
+                    });
 
                 });
 

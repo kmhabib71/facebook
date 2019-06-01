@@ -92,9 +92,11 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                     <div class="top-request top-css top-icon border-left">
                         <img src="assets/images/request.png" alt="">
                     </div>
-                    <div class="top-messanger top-css top-icon ">
-                        <img src="assets/images/messanger.png" alt="">
-                    </div>
+                    <a href="messenger.php">
+                        <div class="top-messanger top-css top-icon ">
+                            <img src="assets/images/messanger.png" alt="">
+                        </div>
+                    </a>
                     <div class="top-notification top-css top-icon">
                         <img src="assets/images/Notification.png" alt="">
                     </div>
@@ -495,6 +497,8 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
         <script src="assets/js/jquery.js"></script>
         <script src="assets/js/about.js"></script>
+        <!--        <script src="assets/js/main.js"></script>-->
+        <script src="assets/js/search.js"></script>
         <script src="assets/dist/emojionearea.min.js"></script>
 
         <script>
@@ -503,11 +507,6 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
             //	function myLoader(){
             //	    preloader.style.display='none';
             //	}
-
-
-
-
-
             jQuery.each(jQuery('textarea[data-autoresize]'), function() {
                 var offset = this.offsetHeight - this.clientHeight;
 
@@ -593,24 +592,7 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
 
                 });
 
-                $(document).on('keyup', 'input#main-search', function() {
-                    var searchText = $(this).val();
-                    if (searchText == '') {
-                        $(".search-result").empty()
-                    } else {
-                        $.post('http://localhost/facebook/core/ajax/search.php', {
-                            searchText: searchText
-                        }, function(data) {
-                            if (data == '') {
-                                alert('Search person nei')
-                            } else {
-                                $(".search-result").html(data);
-                            }
 
-                        });
-                    }
-
-                });
 
 
                 $(document).on('click', '.watchmore-wrap', function() {
@@ -747,10 +729,6 @@ $followCheck = $loadFromPost->followCheck($profileId,$userid);
                         $.post('http://localhost/facebook/core/ajax/postSubmit.php', {
 
                             onlyStatusText: statusText
-
-
-
-
                         }, function(data) {
 
                             $("#adv_dem").html(data);

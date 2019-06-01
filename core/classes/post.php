@@ -761,6 +761,26 @@ SELECT * FROM request LEFT JOIN profile ON profile.userId = request.reqtSender L
 			return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+public function messageData($userid, $otherid){
+  $stmt = $this->pdo->prepare("SELECT * FROM `messages`  LEFT JOIN profile ON profile.userId = messages.messageFrom WHERE (messageTo = :userid and messageFrom = :otherid) OR (messageTo = :otherid and messageFrom  = :userid) ORDER BY messageOn ASC");
+			$stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+			$stmt->bindParam(":otherid", $otherid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
+public function lastPersonWithAllUserMSG($userid){
+  $stmt = $this->pdo->prepare("SELECT * FROM messages LEFT JOIN users ON messages.messageTo = users.user_id LEFT JOIN profile ON users.user_id = profile.userId WHERE messages.messageID IN (SELECT MAX(messages.messageID) FROM messages GROUP BY messages.messageTo, messages.messageFrom) AND users.user_id != :userid");
+    $stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+    public function lastPersonsMsg($userid){
+  $stmt = $this->pdo->prepare("SELECT * FROM profile LEFT JOIN messages ON profile.userId = messages.messageFrom WHERE messages.messageTo = :userid  ORDER BY messages.messageOn LIMIT 0,1");
+    $stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_OBJ);
+}
 
 
 

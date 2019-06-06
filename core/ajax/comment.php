@@ -5,18 +5,24 @@ include '../../connect/login.php';
 $user_id =login::isLoggedIn();
 
 if(isset($_POST['comment'])){
-    
- $comment_text=$loadFromUser->checkInput($_POST['comment']); 
- $userid=$_POST['userid']; 
- $postId=$_POST['postid']; 
+
+ $comment_text=$loadFromUser->checkInput($_POST['comment']);
+ $userid=$_POST['userid'];
+ $postId=$_POST['postid'];
+ $profileid = $_POST['profileid'];
 $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'comment_parent_id' => $postId,  'comment' => $comment_text,'commentOn' => $postId, 'commentAt' => date('Y-m-d H:i:s')));
+
+     if($profileid != $userid){
+   $loadFromUser->create('notification', array('notificationFrom' => $userid,'notificationFor' => $profileid, 'postid'=>$postId,'status' => '0','type' => 'comment', 'notificationOn' => date('Y-m-d H:i:s')));
+       }
+
 
     $commentDetails=$loadFromPost->lastCommentFetch($commentid);
     foreach($commentDetails as $comment){
         $com_react_max_show = $loadFromPost->com_react_max_show($comment->commentOn,$comment->commentID);
 	    $main_react_count = $loadFromPost->com_main_react_count($comment->commentOn,$comment->commentID);
-        
-        
+
+
         ?>
     <li class="new-comment">
         <div class="com-details">
@@ -35,14 +41,14 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
                             </div>
                             <div class="com-nf-3-wrap">
                                 <?php
-  
+
                                                     if($main_react_count->maxreact == '0'){}else{
-    
+
                                                             ?>
                                     <div class="com-nf-3 align-middle">
                                         <div class="nf-3-react-icon">
                                             <div class="react-inst-img align-middle" style="">
-                                                <?php 
+                                                <?php
                                                             foreach($com_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?>
@@ -52,7 +58,7 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
                                             <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
                                         </div>
                                     </div>
-                                    <?php   
+                                    <?php
     }
                     ?>
                             </div>
@@ -88,7 +94,7 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
     foreach($replyDetails as $reply){
         $com_react_max_show = $loadFromPost->reply_react_max_show($reply->commentOn,$reply->commentID,$reply->commentReplyID);
 	    $main_react_count = $loadFromPost->reply_main_react_count($reply->commentOn,$reply->commentID,$reply->commentReplyID);
-        
+
         ?>
                                 <li class="new-reply" style="margin-top:5px;">
                                     <!--                                                        ///.......demo reply comment......////-->
@@ -110,12 +116,12 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
                                                         <div class="com-nf-3-wrap">
                                                             <?php
                                 if($main_react_count->maxreact == '0'){}else{
-    
+
                                                             ?>
                                                                 <div class="com-nf-3 align-middle">
                                                                     <div class="nf-3-react-icon">
                                                                         <div class="react-inst-img align-middle" style="">
-                                                                            <?php 
+                                                                            <?php
                                                             foreach($com_react_max_show as $react_max){
                                                                 echo '<img class="'.$react_max->reactType.'-max-show" src="assets/images/react/'.$react_max->reactType.'.png" alt="" style="height:12px;width:12px;margin-right:2px;cursor:pointer;">';
                                                                  } ?>
@@ -125,7 +131,7 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
                                                                         <?php if($main_react_count->maxreact == '0'){}else{echo $main_react_count->maxreact;} ?>
                                                                     </div>
                                                                 </div>
-                                                                <?php   
+                                                                <?php
     }
                     ?>
                                                         </div>
@@ -158,7 +164,7 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
 
                                 <?php
     }
-                    
+
                     ?>
 
                         </ul>
@@ -177,7 +183,7 @@ $commentid = $loadFromUser->create('comments', array('commentBy' => $userid,'com
 
     <?php
     }
-  
+
 }
 
 

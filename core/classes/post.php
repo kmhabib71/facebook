@@ -776,10 +776,28 @@ public function lastPersonWithAllUserMSG($userid){
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
     public function lastPersonsMsg($userid){
-  $stmt = $this->pdo->prepare("SELECT * FROM profile LEFT JOIN messages ON profile.userId = messages.messageFrom WHERE messages.messageTo = :userid  ORDER BY messages.messageOn LIMIT 0,1");
+  $stmt = $this->pdo->prepare("SELECT * FROM profile LEFT JOIN messages ON profile.userId = messages.messageTo WHERE messages.messageFrom = :userid  ORDER BY messages.messageOn LIMIT 0,1");
     $stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_OBJ);
+}
+    public function notification($userid){
+  $stmt = $this->pdo->prepare("SELECT * FROM notification LEFT JOIN profile ON notification.notificationFrom = profile.userId LEFT JOIN users ON profile.userId = users.user_id WHERE notification.notificationFor = :userid AND notification.status = '0' ORDER BY notification.notificationOn DESC");
+    $stmt->bindParam(":userid", $userid, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+    public function postDetails($postid){
+  $stmt = $this->pdo->prepare("SELECT * FROM users LEFT JOIN profile ON users.user_id = profile.userId LEFT JOIN post ON post.userId = users.user_id WHERE post.post_id = :postid");
+    $stmt->bindParam(":postid", $postid, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+    public function notificationReset($userid){
+  $stmt = $this->pdo->prepare("UPDATE `notification` SET `status` = '1' WHERE `notificationFor` = :user_id AND `status` = '0'");
+    $stmt->bindParam(":user_id", $userid, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_OBJ);
 }
 
 

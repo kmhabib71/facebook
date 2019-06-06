@@ -9,6 +9,9 @@ if(isset($_POST['request'])){
  $userid=$_POST['userid'];
     $loadFromUser->create('request', array('reqtReceiver' => $profileid, 'reqtSender' => $userid, 'reqStatus' => '0', 'requestOn' => date('Y-m-d H:i:s')));
 
+     if($profileid != $userid){
+   $loadFromUser->create('notification', array('notificationFrom' => $userid,'notificationFor' => $postId,'status' => '0','type' => 'request', 'notificationOn' => date('Y-m-d H:i:s')));
+       }
 }
 if(isset($_POST['confirmRequest'])){
  $profileid=$_POST['confirmRequest'];
@@ -21,6 +24,9 @@ if(isset($_POST['cancelSentRequest'])){
  $userid=$_POST['userid'];
 
 $loadFromUser->delete('request', array('reqtReceiver' => $cancelSentRequest,'reqtSender' => $userid));
+//     if($cancelSentRequest != $userID){
+//    $loadFromUser->delete('notification', array('notificationFrom' => $userID,'notificationFor' => $postId,'type' => 'request'));
+//       }
 
 }
 if(isset($_POST['unfriendRequest'])){

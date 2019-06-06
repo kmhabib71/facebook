@@ -1962,3 +1962,74 @@ input.about-class {
 }
 
 /*.......................///////About section End//////...................*/
+
+/*.......................///////About Notification//////...................*/
+.request-count {
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 9px;
+    background-color: red;
+    color: white;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.message-count {
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 9px;
+    background-color: red;
+    color: white;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.notification-count {
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 9px;
+    background-color: red;
+    color: white;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.notification-list-wrap {
+    position: absolute;
+    background-color: white;
+    color: black;
+    top: 31px;
+    z-index: 9;
+    box-shadow: 2px 2px 5px grey;
+}
+.item-notification {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 320px;
+    background-color: #9E9E9E;
+    color: white;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.item-notification:hover {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 320px;
+    background-color: #6f6f6f;
+    color: white;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+/*.......................///////About Notification//////...................*/
